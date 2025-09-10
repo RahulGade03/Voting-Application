@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const { v4: uuidv4 } = require("uuid");
+import mongoose from "mongoose";
+import { v4 as uuidv4 } from "uuid";
 
 const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
 const PollStatusEnum = ["ongoing", "completed"];
@@ -58,4 +58,4 @@ const pollSchema = new mongoose.Schema({
 
 const Poll = mongoose.model("Poll", pollSchema);
 
-module.exports = { Poll };
+export default Poll;

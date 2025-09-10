@@ -1,10 +1,11 @@
 import  express from 'express';
-const router = express.Router();
+const voterRoutes = express.Router();
+import { voterLogin, voterLogout, availablePolls, pollResults, myVotes } from '../controllers/voter.controller.js';
 
-router.route('/voterlogin').post(voterLogin);
-router.route('/logout').post(logout);
-router.route('/polls').get(availablePolls);
-router.route('/pollResults/:pollId').get(pollResults);
-router.route('/myVotes').get(myVotes);
+voterRoutes.route('/login').post(voterLogin);
+voterRoutes.route('/logout').post(voterLogout);
+voterRoutes.route('/polls').get(availablePolls);
+voterRoutes.route('/poll-results/:pollId').get(pollResults);
+voterRoutes.route('/my-votes').get(myVotes);
 
-export default router;
+export default voterRoutes;

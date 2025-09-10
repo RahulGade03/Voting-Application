@@ -1,19 +1,20 @@
-const express = require("express");
-const router = express.Router();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const Voter = require("../models/voter.model.js");   // Your voter schema
-const Poll = require("../models/poll.model.js");     // Poll schema created by admin
-const authMiddleware = require("../middlewares/authMiddleware.js");
-const dotenv = require("dotenv");
+import express from "express";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import Voter from "../models/voter.model.js";   // Your voter schema
+import Poll from "../models/poll.model.js";     // Poll schema created by admin
+import authMiddleware from "../middlewares/authMiddleware.js";
+import dotenv from "dotenv";
+
 dotenv.config();
 
+
 // Web3 + Smart contract setup
-const Web3 = require("web3");
-const contractABI = require("../ABI.json");
-const contractAddress = "0xYourDeployedContractAddress";   // deployed contract
-const web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.WEB3_PROVIDER_URL}`));
-const contract = new web3.eth.Contract(contractABI, contractAddress);
+// const {Web3} = require("web3");
+// const contractABI = require("../ABI.json");
+// const contractAddress = "0xYourDeployedContractAddress";   // deployed contract
+// const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
+// const contract = new web3.eth.Contract(contractABI, contractAddress);
 
 /* -------------------- 1) VOTER LOGIN -------------------- */
 export const voterLogin = async (req, res) => {
@@ -119,5 +120,3 @@ export const myVotes = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch voted polls" });
   }
 };
-
-module.exports = router;

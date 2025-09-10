@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
 const ProfessionEnum = ["student", "faculty", "research scholar", "staff"];
@@ -15,4 +15,4 @@ const voterSchema = new mongoose.Schema({
 
 const Voter = mongoose.model("Voter", voterSchema);
 
-module.exports = { Voter };
+export default Voter;

@@ -1,17 +1,17 @@
 import  express from 'express';
-import isAuthenticated from '../middlewares/authMiddleware.js';
+import authMiddleware from '../middlewares/authMiddleware.js';
 import { adminLogin, adminLogout, createPoll, deleteVoter, pollList, pollResult, registerVoter, viewVoter, viewVoters } from '../controllers/admin.controller.js';
 
-const router = express.Router();
+const adminRoutes = express.Router();
 
-router.route('/adminLogin').post(adminLogin);
-router.route('/adminLogout').post(authMiddleware, adminLogout);
-router.route('/createPoll').post(authMiddleware, createPoll);
-router.route('/registerVoter').post(authMiddleware, registerVoter);
-router.route('/pollList').get(authMiddleware, pollList);
-router.route('/pollResult/:pollId').get(authMiddleware, pollResult);
-router.route('/viewVoters').get(authMiddleware, viewVoters);
-router.route('/viewVoter/:id').get(authMiddleware, viewVoter);
-router.route('/deleteVoter/:id').delete(authMiddleware, deleteVoter);
+adminRoutes.route('/login').post(adminLogin);
+adminRoutes.route('/logout').post(authMiddleware, adminLogout);
+adminRoutes.route('/create-poll').post(authMiddleware, createPoll);
+adminRoutes.route('/register-voter').post(authMiddleware, registerVoter);
+adminRoutes.route('/poll-list').get(authMiddleware, pollList);
+adminRoutes.route('/poll-result/:pollId').get(authMiddleware, pollResult);
+adminRoutes.route('/view-voters').get(authMiddleware, viewVoters);
+adminRoutes.route('/view-voter/:id').get(authMiddleware, viewVoter);
+adminRoutes.route('/delete-voter/:id').delete(authMiddleware, deleteVoter);
 
-export default router;
+export default adminRoutes;

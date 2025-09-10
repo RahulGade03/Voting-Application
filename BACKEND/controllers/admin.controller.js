@@ -1,23 +1,23 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
-const Admin = require("../models/admin.model.js");
-const Voter = require("../models/voter.model.js");
-const Poll = require("../models/poll.model.js");
-const authMiddleware = require("../middlewares/authMiddleware.js");
-const { v4: uuidv4 } = require("uuid");
-const {Web3} = require('web3');
-const Web3 = require("web3");
-const contractABI = require("./ABI.json"); // ABI from Remix build
-const contractAddress = "0xYourDeployedContractAddress";   // Replace with your deployed contract
-
-const web3 = new Web3(new Web3.providers.HttpProvider(`${process.env.WEB3_PROVIDER_URL}`));
-
-const contract = new web3.eth.Contract(contractABI, contractAddress);
+import express from "express";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import Admin from "../models/admin.model.js";
+import Voter from "../models/voter.model.js";
+import Poll from "../models/poll.model.js";
+import { v4 as uuidv4 } from "uuid";
+// import { Web3 } from "web3";
+// import contractABI from "../ABI.json"; // ABI from Remix build
+// const contractAddress = "0xYourDeployedContractAddress";   // Replace with your deployed contract
 
 dotenv.config();
-const router = express.Router();
+
+
+// const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
+
+// const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+// console.log("Loaded WEB3_PROVIDER_URL =", process.env.WEB3_PROVIDER_URL);
 
 /* -------------------- 1) Admin Login -------------------- */
 export const adminLogin = async (req, res) => {
@@ -29,13 +29,15 @@ export const adminLogin = async (req, res) => {
     const validPassword = await bcrypt.compare(password, admin.password);
     if (!validPassword) return res.status(400).json({ error: "Invalid password" });
 
-    const token = jwt.sign({ id: admin._id, emailId: admin.emailId }, process.env.JWT_SECRET_KEY, {
+    const token = jwt.sign(
+      { id: admin._id, emailId: admin.emailId }, 
+      process.env.JWT_SECRET_KEY, {
       expiresIn: "2h"
     });
 
     res.status(200).json({ message: "Login successful", token });
   } catch (err) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -168,5 +170,3 @@ export const deleteVoter = async (req, res) => {
     res.status(500).json({ error: "Failed to delete voter" });
   }
 };
-
-module.exports = router;
