@@ -6,6 +6,7 @@ import Admin from "../models/admin.model.js";
 import Voter from "../models/voter.model.js";
 import Poll from "../models/poll.model.js";
 import { v4 as uuidv4 } from "uuid";
+import contract from "../blockchain/contract.js";
 // import { Web3 } from "web3";
 // import contractABI from "../ABI.json"; // ABI from Remix build
 // const contractAddress = "0xYourDeployedContractAddress";   // Replace with your deployed contract
@@ -30,38 +31,61 @@ export const adminLogin = async (req, res) => {
     if (!validPassword) return res.status(400).json({ error: "Invalid password" });
 
     const token = jwt.sign(
-      { id: admin._id, emailId: admin.emailId }, 
+      { userId: admin._id, emailId: admin.emailId }, 
       process.env.JWT_SECRET_KEY, {
       expiresIn: "2h"
     });
-
-    res.status(200).json({ message: "Login successful", token });
+    const tempAdmin = {
+      id: admin._id,
+      name: admin.name,
+      emailId: admin.emailId,
+      createdPolls: admin.createdPolls,
+      school: admin.school,
+      access: admin.access
+    }
+    res.status(200).cookie('token', token, {httpOnly: true, sameSite:'strict', maxAge: 1*24*60*60*1000}).json({ admin: tempAdmin});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
 /* -------------------- 2) Admin Logout -------------------- authmiddleware */
-export const adminLogout = (req, res) => {
-  // With JWT, logout is handled client-side (delete token).
-  res.json({ message: "Logout successful (remove token client-side)" });
-};
+export const adminLogout = async (req, res) => {
+    try {
+        return res.cookie ('token', '', {maxAge: 0}).json ({
+            message: 'Successfully logged out!',
+            success: true,
+        })
+    } catch (error) {
+        console.log (error);
+    }
+}
 
 /* -------------------- 3) Create Poll -------------------- authmiddleware */
 export const createPoll = async (req, res) => {
   try {
-    const { title, description, candidates, eligibleSchool, duration } = req.body;
+    const { title, description, candidates, schools, endDate } = req.body;
+    const candidatesIDs = await Promise.all(
+      candidates.map((cand) => (
+      Voter.findOne({ emailId: cand.emailId }).then((voter) => {
+        if (!voter) {
+          throw new Error(`Candidate with email ${cand.emailId} not found`);
+        }
+        return voter._id;
+      })
+    ))
+    );
 
     const poll = new Poll({
       pollId: uuidv4(),
       title,
       description,
-      candidates,
+      candidates: candidatesIDs,
       voters:[],
       votes: [],
-      eligibleSchool,
-      duration,
-      status: "ongoing",
+      eligibleSchool: schools,
+      startDate: new Date(),
+      endDate: new Date(endDate),
       createdBy: req.id
     });
 
@@ -70,9 +94,9 @@ export const createPoll = async (req, res) => {
     // Link to admin
     await Admin.findByIdAndUpdate(req.id, { $push: { createdPolls: poll._id } });
 
-    res.status(201).json({ message: "Poll created successfully", poll });
+    res.status(201).json({ message: "Poll created successfully", poll, success: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed to create poll", details: err.message });
+    res.status(500).json({ error: "Failed to create poll", details: err.message, success: false });
   }
 };
 
@@ -93,7 +117,7 @@ export const registerVoter = async (req, res) => {
     });
 
     await voter.save();
-    res.status(201).json({ message: "Voter registered successfully", voter });
+    res.status(201).json({ message: "Voter registered successfully", voter, success: true });
   } catch (err) {
     res.status(500).json({ error: "Failed to register voter", details: err.message });
   }
@@ -102,10 +126,37 @@ export const registerVoter = async (req, res) => {
 /* -------------------- 5) List Polls Created by Admin -------------------- authmiddleware */
 export const pollList = async (req, res) => {
   try {
-    const polls = await Poll.find({ createdBy: req.id });
-    res.json(polls);
+    const polls = await Poll.find({ createdBy: req.id }).populate("candidates");
+
+    const pollsWithVotes = await Promise.all(
+      polls.map(async (poll) => {
+        // Get votes from blockchain
+        let chainVotes = await contract.methods.getVotesByPoll(poll.pollId).call();
+
+        // Format blockchain votes
+        chainVotes = chainVotes.map((v) => ({
+          pollId: v.pollId,
+          candidate: v.candidate,
+          voter: v.voter,
+        }));
+
+        return {
+          pollId: poll.pollId,
+          title: poll.title,
+          description: poll.description,
+          candidates: poll.candidates,
+          eligibleSchool: poll.eligibleSchool,
+          startDate: poll.startDate,
+          endDate: poll.endDate,
+          votes: chainVotes,
+        };
+      })
+    );
+
+    res.status(200).json({ polls: pollsWithVotes, success: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch polls" });
+    console.error("pollList error:", err);
+    res.status(500).json({ error: "Failed to fetch polls", details: err.message });
   }
 };
 

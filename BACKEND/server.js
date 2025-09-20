@@ -1,16 +1,19 @@
-// const express = require("express");
+
 import express from 'express';
-// const cors =  require('cors');
 import cors from 'cors';
-// const adminRoutes = require("./routes/admin.routes.js");
+import cookieParser from "cookie-parser";
 import adminRoutes from "./routes/admin.routes.js";
-// const voterRoutes = require("./routes/voter.routes.js");
 import voterRoutes from "./routes/voter.routes.js";
 import connectDB from './middlewares/connectdb.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cookieParser());
+
+app.use(cors({
+  origin: "http://localhost:5173",  // frontend URL
+  credentials: true                 // allow cookies/authorization headers
+}));
 app.use(express.json());
 
 app.use("/admin", adminRoutes);

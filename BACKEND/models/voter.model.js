@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
-const ProfessionEnum = ["student", "faculty", "research scholar", "staff"];
+const SchoolEnum = ["SCOPE", "SENSE", "SITE", "HOT", "OTHER"];
+const ProfessionEnum = ["Student", "Faculty", "Research Scholar", "Staff"];
 
 const voterSchema = new mongoose.Schema({
   name: { type: String, required: true },

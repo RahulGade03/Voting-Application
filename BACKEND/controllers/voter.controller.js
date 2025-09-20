@@ -26,18 +26,26 @@ export const voterLogin = async (req, res) => {
     const isMatch = await bcrypt.compare(password, voter.password);
     if (!isMatch) return res.status(401).json({ error: "Invalid credentials" });
 
-    const token = jwt.sign({ voterId: voter._id }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
-    res.json({ token });
+    const token = jwt.sign({ userId: voter._id }, process.env.JWT_SECRET_KEY, { expiresIn: "1d" });
+    res.status(200).cookie('token', token, {httpOnly: true, sameSite:'strict', maxAge: 1*24*60*60*1000}).json({
+      voter: voter 
+    });
   } catch (err) {
     res.status(500).json({ error: "Login failed" });
   }
 };
 
 /* -------------------- 2) VOTER LOGOUT -------------------- */
-export const voterLogout = (req, res) => {
-  // Just clear token client-side or add to blacklist
-  res.json({ message: "Logged out successfully" });
-};
+export const voterLogout = async (req, res) => {
+    try {
+        return res.cookie ('token', '', {maxAge: 0}).json ({
+            message: 'Successfully logged out!',
+            success: true,
+        })
+    } catch (error) {
+        console.log (error);
+    }
+}
 
 /* -------------------- 3) VIEW AVAILABLE POLLS -------------------- */
 export const availablePolls = async (req, res) => {

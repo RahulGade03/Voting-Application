@@ -9,50 +9,30 @@ const pollSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   candidates: [
-    {
-      metamaskId: {
-        type: String,
-        required: true,
-        validate: {
-          validator: async function (value) {
-            // Ensure candidate exists in voter DB
-            const voter = await mongoose.model("Voter").findOne({ metamaskId: value });
-            return !!voter;
-          },
-          message: "Candidate metamaskId must exist in voter database"
-        }
-      },
-      name: { type: String, required: true }
-    }
+    { type: mongoose.Schema.Types.ObjectId, ref: "Voter", required: true }
   ],
   voters: [
-    {
-      metamaskId: {
-        type: String,
-        required: true,
-        validate: {
-          validator: async function (value) {
-            // Ensure voter exists in voter DB
-            const voter = await mongoose.model("Voter").findOne({ metamaskId: value });
-            return !!voter;
-          },
-          message: "Voter metamaskId must exist in voter database"
-        }
-      }
-    }
+    { type: mongoose.Schema.Types.ObjectId, ref: "Voter" }
   ],
   votes: [
     {
-      candidateMetamaskId: { type: String, required: true },
-      voterMetamaskId: { type: String, required: true }
+      candidateId: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "Voter",
+        validate: {
+          validator: function(candidateId) {
+            // Ensure candidateId exists in this poll's candidates array
+            return this.candidates.includes(candidateId);
+          },
+          message: "candidateId must be one of the candidates of this poll."
+        }
+      },
+      voterId: { type: mongoose.Schema.Types.ObjectId, ref: "Voter" }
     }
   ],
-  eligibleSchool: { type: String, enum: SchoolEnum, required: true },
-  duration: {
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true }
-  },
-  status: { type: String, enum: PollStatusEnum, default: "ongoing" },
+  eligibleSchool: { type: [String], enum: SchoolEnum, required: true },
+  startDate: { type: Date, required: true },
+  endDate: { type: Date, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true }
 });
 
