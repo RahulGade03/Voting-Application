@@ -1,4 +1,4 @@
-import { Home, Search, PlusSquare, LogOut } from "lucide-react";
+import { Home, Search, PlusSquare, LogOut, Newspaper, UserPlus2, Users } from "lucide-react";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom"; // if you are using react-router
@@ -23,9 +23,9 @@ const LeftSideBarAdmin = () => {
     },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
     { icon: <PlusSquare className="w-5 h-5" />, text: "Create Poll" },
-    { icon: <PlusSquare className="w-5 h-5" />, text: "My Posted Polls" },
-    { icon: <Search className="w-5 h-5" />, text: "Register Admin" },
-    { icon: <PlusSquare className="w-5 h-5" />, text: "Register Voter" },
+    { icon: <Newspaper className="w-5 h-5" />, text: "My Posted Polls" },
+    { icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" },
+    { icon: <Users className="w-5 h-5" />, text: "Register Voter" },
     { icon: <Search className="w-5 h-5" />, text: "Search Voter" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },
   ];

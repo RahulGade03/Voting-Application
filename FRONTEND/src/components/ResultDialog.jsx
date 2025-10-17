@@ -26,7 +26,7 @@ const ResultDialog = ({ open, setOpen, poll }) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+      <DialogOverlay className="fixed inset-0 bg-black/20 backdrop-blur-md z-40" />
       <DialogContent
         onInteractOutside={() => setOpen(false)}
         className="fixed top-1/2 left-1/2 z-50 w-full max-w-2xl 

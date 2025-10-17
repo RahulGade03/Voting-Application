@@ -1,6 +1,6 @@
 import { setAdmin, setVoter } from '@/redux/authSlice';
 import { Avatar, AvatarFallback } from '@radix-ui/react-avatar';
-import { Home, LogOut, PlusSquare } from 'lucide-react';
+import { Home, LogOut, PlusSquare, ListTodo } from 'lucide-react';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -22,7 +22,7 @@ const LeftSideBarVoter = () => {
       text: `Hello, ${voter.name.split(" ")[0]}`,
     },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
-    { icon: <PlusSquare className="w-5 h-5" />, text: "My Voted Polls" },
+    { icon: <ListTodo className="w-5 h-5" />, text: "My Voted Polls" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },
   ];
 
