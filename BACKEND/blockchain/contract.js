@@ -1,12 +1,12 @@
 import { Web3 } from "web3";
 import ABI from "./ABI.json" with { type: "json" };
+import dotenv from "dotenv";
+dotenv.config();
 
 // Web3 setup
-const web3 = new Web3(
-  "https://alien-boldest-uranium.ethereum-sepolia.quiknode.pro/cccd48313e2dcf82fb4ebf9df668d481f3c6ad10/"
-);
+const web3 = new Web3(process.env.WEB3_PROVIDER_URL);  // MOST PROBABLY NEEDS A CHANGE in .env file
 
 // Contract setup
-const contractAddress = "0x713e047f453b269350fa10f25485e8f77737fd1b"; // remaining
+const contractAddress = process.env.CONTRACT_ADDRESS; // remaining
 const contract = new web3.eth.Contract(ABI, contractAddress);
 export default contract;

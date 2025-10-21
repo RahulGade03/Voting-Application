@@ -3,11 +3,9 @@ import React, { useState } from 'react'
 const RegisterVoter = () => {
   const [form, setForm] = useState({
     name: '',
-    metamaskId: '',
     school: 'SCOPE',
     emailId: '',
     profession: 'Student',
-    password: ''
   })
 
   const submitHandler = async (e) => {
@@ -57,18 +55,6 @@ const RegisterVoter = () => {
             />
           </div>
 
-          {/* Metamask ID */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Metamask ID</label>
-            <input 
-              type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              name='metamaskId'
-              onChange={(e) => onChange(e)}
-              value={form.metamaskId}
-            />
-          </div>
-
           {/* School */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">School</label>
@@ -111,18 +97,6 @@ const RegisterVoter = () => {
               <option value="Staff">Staff</option>
               <option value="Research Scholar">Research Scholar</option>
             </select>
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-            <input 
-              type="password"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              name='password'
-              onChange={(e) => onChange(e)}
-              value={form.password}
-            />
           </div>
 
           {/* Submit Button */}

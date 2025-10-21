@@ -1,11 +1,7 @@
 import './App.css'
 import ChangePassword from './components/ChangePassword';
-import Login from './components/Login'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Logout from './components/Logout';
 import ProtectedRoutes from './components/ProtectedRoutes';
-import LeftSideBarAdmin from './components/LeftSideBarAdmin';
-import LeftSideBarVoter from './components/LeftSideBarVoter';
 import HomeAdmin from './components/HomeAdmin';
 import MyCreatedPolls from './components/MyCreatedPolls';
 import SearchVoter from './components/SearchVoter';
@@ -15,6 +11,7 @@ import MyVotedPolls from './components/MyVotedPolls';
 import LoginPage from './components/Login';
 import MainLayout from './components/MainLayout';
 import AddAdmin from './components/AddAdmin';
+import ForgotPassword from './components/ForgotPassword';
 
 
 const browserRouter = createBrowserRouter([
@@ -39,6 +36,7 @@ const browserRouter = createBrowserRouter([
   },
   { path: '/', element: <LoginPage /> },
   { path: '/change-password', element: <ChangePassword /> },
+  { path: '/forgot-password', element: <ForgotPassword /> }
 ]);
 
 function App() {

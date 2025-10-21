@@ -1,4 +1,3 @@
-import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -7,18 +6,10 @@ import Voter from "../models/voter.model.js";
 import Poll from "../models/poll.model.js";
 import { v4 as uuidv4 } from "uuid";
 import contract from "../blockchain/contract.js";
-// import { Web3 } from "web3";
-// import contractABI from "../ABI.json"; // ABI from Remix build
-// const contractAddress = "0xYourDeployedContractAddress";   // Replace with your deployed contract
+import crypto from "crypto"
+import sendCredentialsMail from "../utils/nodemailer.js";
 
 dotenv.config();
-
-
-// const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
-
-// const contract = new web3.eth.Contract(contractABI, contractAddress);
-
-// console.log("Loaded WEB3_PROVIDER_URL =", process.env.WEB3_PROVIDER_URL);
 
 /* -------------------- 1) Admin Login -------------------- */
 export const adminLogin = async (req, res) => {
@@ -27,14 +18,15 @@ export const adminLogin = async (req, res) => {
     const admin = await Admin.findOne({ emailId });
     if (!admin) return res.status(400).json({ error: "Invalid email" });
 
-    const validPassword = await bcrypt.compare(password, admin.password);
-    if (!validPassword) return res.status(400).json({ error: "Invalid password" });
+    const isValid = await bcrypt.compare(password, admin.password);
+    if (!isValid) return res.status(400).json({ error: "Invalid password" });
 
     const token = jwt.sign(
       { userId: admin._id, emailId: admin.emailId }, 
       process.env.JWT_SECRET_KEY, {
-      expiresIn: "2h"
+      expiresIn: "1h"
     });
+    
     const tempAdmin = {
       id: admin._id,
       name: admin.name,
@@ -43,9 +35,9 @@ export const adminLogin = async (req, res) => {
       school: admin.school,
       access: admin.access
     }
-    res.status(200).cookie('token', token, {httpOnly: true, sameSite:'strict', maxAge: 1*24*60*60*1000}).json({ admin: tempAdmin});
+    res.status(200).cookie('token', token, {httpOnly: true, sameSite:'strict', maxAge: 1*24*60*60*1000}).json({ admin: tempAdmin, success: true});
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: err.message, success: false });
   }
 };
 
@@ -75,6 +67,10 @@ export const createPoll = async (req, res) => {
       })
     ))
     );
+    /* Why we used Promise.all() here? 
+    Because Voter.findOne() inside candidates.map(...) returns an array of Promises (one for each candidate).
+    Promise.all() waits for all these Promises to resolve and returns a single Promise that resolves to an array of candidate IDs. If we did not use Promise.all(), we would end up with an array of unresolved Promises instead of actual candidate IDs.
+    */
 
     const poll = new Poll({
       pollId: uuidv4(),
@@ -83,7 +79,7 @@ export const createPoll = async (req, res) => {
       candidates: candidatesIDs,
       voters:[],
       votes: [],
-      eligibleSchool: schools,
+      eligibleSchools: schools,
       startDate: new Date(),
       endDate: new Date(endDate),
       createdBy: req.id
@@ -103,60 +99,90 @@ export const createPoll = async (req, res) => {
 /* -------------------- 4) Register Voter -------------------- authmiddleware */
 export const registerVoter = async (req, res) => {
   try {
-    const { name, metamaskId, emailId, school, password, profession } = req.body;
-
+    const { name, emailId, school, profession } = req.body;
+    const password = crypto.randomBytes(8).toString('hex');
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const voter = new Voter({
+    let voter = new Voter({
       name,
-      metamaskId,
       emailId,
       school,
       password: hashedPassword,
-      profession
+      profession,
+      mustChangePassword: true
     });
 
     await voter.save();
+    const text = `Hello ${name},
+
+Your account has been created successfully!
+
+Login Details:
+Type: Voter Account
+Username (email): ${emailId}
+Password: ${password}
+
+Please login and change your password immediately.
+
+- Voting Application Team`;
+
+    await sendCredentialsMail(emailId, text);
     res.status(201).json({ message: "Voter registered successfully", voter, success: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed to register voter", details: err.message });
+    res.status(500).json({ error: "Failed to register voter", details: err.message, success: false });
+  }
+};
+
+/* -------------------- 4) Register Admin -------------------- authmiddleware */
+export const registerAdmin = async (req, res) => {
+  try {
+    const superAdmin = await Admin.findOne({_id: req.id});
+    if (superAdmin.access !== "ALL") {
+      return res.status(403).josn({ error:"Access denied. Only super admins can register new admins.", success: false });
+    }
+
+    const { name, emailId, school, access } = req.body;
+    const password = crypto.randomBytes(8).toString('hex');
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const admin = new Admin({
+      name,
+      emailId,
+      password: hashedPassword,
+      school,
+      access,
+      mustChangePassword: true
+    });
+
+    await admin.save();
+    const text = `Hello ${name},
+
+Your account has been created successfully!
+
+Login Details:
+Type: Admin Account
+Username (email): ${emailId}
+Password: ${password}
+
+Please login and change your password immediately.
+
+- Voting Application Team`;
+
+    await sendCredentialsMail(emailId, text);
+    res.status(201).json({ message: "Admin registered successfully", admin, success: true });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to register admin", details: err.message, success: false });
   }
 };
 
 /* -------------------- 5) List Polls Created by Admin -------------------- authmiddleware */
 export const pollList = async (req, res) => {
   try {
-    const polls = await Poll.find({ createdBy: req.id }).populate("candidates");
-
-    const pollsWithVotes = await Promise.all(
-      polls.map(async (poll) => {
-        // Get votes from blockchain
-        let chainVotes = await contract.methods.getVotesByPoll(poll.pollId).call();
-
-        // Format blockchain votes
-        chainVotes = chainVotes.map((v) => ({
-          pollId: v.pollId,
-          candidate: v.candidate,
-          voter: v.voter,
-        }));
-
-        return {
-          pollId: poll.pollId,
-          title: poll.title,
-          description: poll.description,
-          candidates: poll.candidates,
-          eligibleSchool: poll.eligibleSchool,
-          startDate: poll.startDate,
-          endDate: poll.endDate,
-          votes: chainVotes,
-        };
-      })
-    );
-
-    res.status(200).json({ polls: pollsWithVotes, success: true });
+    let polls = await Poll.find({ createdBy: req.id }).select('-candidates -votes -eligibleSchools');
+    res.status(200).json({ polls, success: true });
   } catch (err) {
     console.error("pollList error:", err);
-    res.status(500).json({ error: "Failed to fetch polls", details: err.message });
+    res.status(500).json({ error: "Failed to fetch polls", details: err.message, success: false });
   }
 };
 
@@ -164,13 +190,14 @@ export const pollList = async (req, res) => {
 export const pollResult = async (req, res) => {
   try {
     const pollId = req.params.pollId;
+    let poll = await Poll.findOne({ pollId: pollId }).populate({path: 'candidates', select: 'name emailId _id'}).lean();
+    if (!poll) return  res.status(404).json({ error: "Poll not found", success: false });
 
     // Call smart contract function (returns array of votes)
     const votes = await contract.methods.getVotesByPoll(pollId).call();
-
-    if (!votes || votes.length === 0) {
-      return res.status(404).json({ error: "No votes found for this poll" });
-    }
+    // if (!votes) {
+    //   return res.status(404).json({ error: "No votes found for this poll", success: true });
+    // }
 
     // Count votes per candidate
     const results = {};
@@ -179,35 +206,56 @@ export const pollResult = async (req, res) => {
       results[candidateAddr] = (results[candidateAddr] || 0) + 1;
     });
 
-    res.json({
-      pollId,
+    poll = {...poll, results};
+
+    res.status(200).json({
+      poll,
       totalVotes: votes.length,
-      results
+      success: true
     });
   } catch (err) {
     console.error("Blockchain error:", err);
-    res.status(500).json({ error: "Failed to fetch poll results from blockchain" });
+    res.status(500).json({ error: "Failed to fetch poll results from blockchain", success: false });
   }
 };
 
 /* -------------------- 7) View All Voters -------------------- authmiddleware */
 export const viewVoters = async (req, res) => {
   try {
-    const voters = await Voter.find();
-    res.json(voters);
+    // Get page number from query params (default to 1)
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10; // 10 voters per batch
+
+    // Calculate how many documents to skip
+    const skip = (page - 1) * limit;
+
+    // Fetch 10 voters for the requested page
+    const voters = await Voter.find().skip(skip).limit(limit).select('-password');
+
+    // Total count for frontend pagination
+    const totalVoters = await Voter.countDocuments();
+
+    res.status(200).json({
+      total: totalVoters,
+      page,
+      totalPages: Math.ceil(totalVoters / limit),
+      voters,
+      success: true
+    });
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch voters" });
+    res.status(500).json({ error: "Failed to fetch voters", success: false });
   }
 };
+
 
 /* -------------------- 8) View a Particular Voter -------------------- authmiddleware */
 export const viewVoter = async (req, res) => {
   try {
-    const voter = await Voter.findById(req.params.id);
-    if (!voter) return res.status(404).json({ error: "Voter not found" });
-    res.json(voter);
+    const voter = await Voter.findById(req.params.id).select('-password -pollsVoted');
+    if (!voter) return res.status(404).json({ error: "Voter not found", success: false });
+    res.status(200).json({voter, success: true});
   } catch (err) {
-    res.status(500).json({ error: "Failed to fetch voter" });
+    res.status(500).json({ error: "Failed to fetch voter", success: false });
   }
 };
 
@@ -216,8 +264,60 @@ export const deleteVoter = async (req, res) => {
   try {
     const voter = await Voter.findByIdAndDelete(req.params.id);
     if (!voter) return res.status(404).json({ error: "Voter not found" });
-    res.json({ message: "Voter deleted successfully" });
+    res.status(200).json({ voter, message: "Voter deleted successfully", success: true });
   } catch (err) {
-    res.status(500).json({ error: "Failed to delete voter" });
+    res.status(500).json({ error: "Failed to delete voter", success: false });
   }
 };
+
+/* -------------------- 10) Change Password -------------------- authmiddleware */
+export const changePassword = async (req, res) => {
+    try {
+      const admin = await Admin.findById(req.id);
+      if (!admin) {
+        return res.status(404).json({error: "Admin not found", success: false});
+      }
+      const {newPassword} = req.body;
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      admin.password = hashedNewPassword;
+      admin.mustChangePassword = false;
+      await admin.save();
+      res.status(200).json({message: "Password changed successfully", success: true});
+    } catch (error) {
+        res.status(500).json({error: "Falied to change password", success: false});
+    }
+}
+
+/* -------------------- 11) Forgot Password -------------------- */
+export const forgotPassword = async (req, res) => {
+  try {
+      const {email} = req.body;
+      const admin = await Admin.findOne({emailId: email});
+      if (!admin) {
+        return res.status(404).json({error: "Admin not found", success: false});
+      }
+      const newPassword = crypto.randomBytes(8).toString('hex');
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      admin.password = hashedNewPassword;
+      admin.mustChangePassword = true;
+      await admin.save();
+      const text = `Hello ${admin.name},
+
+We received your request to reset your password. Your new password is provided below. This is a temporary password, so please log in and change it immediately.
+
+Login Details:
+Type: Admin Account
+Username (email): ${email}
+Password: ${password}
+
+Please login and change your password immediately.
+
+- Voting Application Team`;
+
+      await sendCredentialsMail(email, text);
+      res.status(200).json({message: "Password reset information sent to your email", success: true});
+  }
+  catch (error) {
+    res.status(500).json({error: "Failed to process forgot password", success: false});
+  }
+}

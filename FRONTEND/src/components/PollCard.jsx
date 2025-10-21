@@ -1,8 +1,30 @@
 import React, { useState } from "react";
 import ResultDialog from "./ResultDialog";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedPoll } from "@/redux/pollSlice";
 
 const PollCard = ({ poll }) => {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+  const {voter, admin} = useSelector((store) => store.auth);
+
+  const handleViewResults = async () => {
+    let res;
+    if (voter !== null) {
+      res = await fetch(`http://localhost:5000/voter/poll-results/${poll._id}`);
+    }
+    else if (admin !== null) {
+      res = await fetch(`http://localhost:5000/admin/poll-results/${poll._id}`);
+    }
+    const data = await res.json();
+    const pollData = {
+      ...data,
+      title: poll.title,
+      description: poll.description,
+    }
+    await dispatch(setSelectedPoll(pollData));
+    setOpen(true);
+  }
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
@@ -21,14 +43,14 @@ const PollCard = ({ poll }) => {
         </div>
       </div>
 
-      <button
-        onClick={() => setOpen(true)}
+      { (Date.now()>poll.startDate) ? <button
+        onClick={handleViewResults}
         className="mt-4 w-full py-2 px-4 bg-indigo-600 text-white rounded-xl font-medium text-sm hover:bg-indigo-700 transition-colors"
       >
         View Results
-      </button>
+      </button> : <p className="font-bold border-2 border-blue-600 p-1 m-2 rounded-2xl text-center">Results not declared yet</p>}
 
-      <ResultDialog open={open} setOpen={setOpen} poll={poll} />
+      <ResultDialog open={open} setOpen={setOpen} />
     </div>
   );
 };

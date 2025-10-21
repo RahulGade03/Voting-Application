@@ -1,5 +1,7 @@
+import { setAdmin } from '@/redux/authSlice';
 import { Dialog, DialogContent, DialogTitle, DialogOverlay, DialogDescription } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CreatePoll = ({ open, setOpen }) => {
   const [form, setForm] = useState({
@@ -10,6 +12,9 @@ const CreatePoll = ({ open, setOpen }) => {
     endDate: '',
   });
   const [candInp, setCandInp] = useState('');
+
+  const dispatch = useDispatch();
+  const { admin } = useSelector((store) => store.auth);
 
   const changeHandler = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -71,11 +76,14 @@ const CreatePoll = ({ open, setOpen }) => {
           endDate: '',
           createdBy: ''
         });
+        const poll = data.poll;
+        const updatedPolls = [...admin.polls, poll ];
+        const updatedAdmin = {...admin, polls: updatedPolls};
+        dispatch(setAdmin(updatedAdmin));
       }
     } catch (error) {
       console.log(error);
     }
-    // send to backend
   };
 
   return (

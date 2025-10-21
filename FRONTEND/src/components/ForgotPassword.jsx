@@ -1,78 +1,54 @@
-import { useState } from "react";
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Mail, Lock, User } from "lucide-react";
-import { useSelector, useDispatch } from "react-redux";
-import { setAdmin, setVoter } from "@/redux/authSlice";
-import { Link, useNavigate } from "react-router-dom";
+import { Mail, User } from "lucide-react";
 
-export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("voter"); // default role
+const ForgotPassword = () => {
+    const [email, setEmail] = useState('');
+    const [role, setRole] = useState('voter');
+    const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const {voter, admin} = useSelector((state) => state.auth);
-  const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      if (role === 'voter') {
-        const voterRes = await fetch ('http://localhost:5000/voter/login', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            emailId: email,
-            password
-          }),
-          credentials: 'include' // include cookies in the request
-        })
-        const voterData = await voterRes.json();
-        console.log(voterData);
-        if (voterData) {
-          dispatch(setVoter(voterData.voter));
-          if (voterData.voter.mustChangePassword) {
-            navigate('/change-password');
-          }
-          else {
-            navigate('/voter');
-          }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+          
+          let res;
+          if (role === 'voter') {
+            console.log("Submitting forgot password for voter");
+           res = await fetch('http://localhost:5000/voter/forgot-password', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({emailId: email}) 
+            });
+            console.log("Response received from voter forgot password endpoint");
         }
-      }
-      else if (role === 'admin') {
-        const adminRes = await fetch ('http://localhost:5000/admin/login', {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            emailId: email,
-            password: password
-          }),
-          credentials: 'include'
-        })
-        const adminData = await adminRes.json();
-        console.log(adminData);
-        if (adminData.admin) {
-          dispatch(setAdmin(adminData.admin));
-          if (adminData.admin.mustChangePassword) {
-            navigate('/change-password');
-          }
-          else {
-            navigate('/admin');
-          }
+        else if (role === 'admin') {
+            res = await fetch('http://localhost:5000/admin/forgot-password', {
+                method: 'POST',
+                headers: {
+                  "Content-Type": 'application/json'
+                },
+                body: JSON.stringify({email})
+              });
         }
-      }
-    } catch (error) {
+        
+        const data = await res.json();
+        console.log(data);
+        if (data.success) {
+          navigate('/');
+        }
+        else {
+          throw new Error(data.error)
+        }
+      } catch (error) {
         console.log(error);
+      }
     }
-  };
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <motion.div
@@ -84,9 +60,9 @@ export default function LoginPage() {
         <Card className="shadow-xl rounded-2xl border border-slate-700 bg-slate-800/80 backdrop-blur-md">
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold text-center text-white mb-6">
-              Blockchain Voting System
+              Blockchain Voting System - Forgot Password
             </h2>
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
               <div className="relative">
                 <Mail className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
@@ -95,19 +71,6 @@ export default function LoginPage() {
                   placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="pl-10 bg-slate-900/50 text-white border-slate-600 focus:ring-2 focus:ring-teal-500"
-                />
-              </div>
-
-              {/* Password */}
-              <div className="relative">
-                <Lock className="absolute left-3 top-3 text-slate-400 w-5 h-5" />
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   required
                   className="pl-10 bg-slate-900/50 text-white border-slate-600 focus:ring-2 focus:ring-teal-500"
                 />
@@ -149,13 +112,15 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"
               >
-                Login
+                Submit
               </Button>
             </form>
           </CardContent>
-          <Link to={'/forgot-password'} className="text-gray-300 underline self-center">Forgot Password?</Link>
+          <Link to={'/'} className="text-gray-300 text-lg underline self-center">Login</Link>
         </Card>
       </motion.div>
     </div>
-  );
+  )
 }
+
+export default ForgotPassword

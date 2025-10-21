@@ -5,5 +5,5 @@ const SearchVoter = () => {
     <div>SearchVoter</div>
   )
 }
-
+// Also implement pagination here, api created by name 'viewVoters';
 export default SearchVoter

@@ -6,23 +6,10 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@radix-ui/react-dialog";
+import { useSelector} from "react-redux";
 
-const ResultDialog = ({ open, setOpen, poll }) => {
-  // Compute vote counts per candidate
-  const candidateVotes = useMemo(() => {
-    const counts = {};
-    poll.candidates.forEach((cand) => {
-      counts[cand._id] = 0;
-    });
-
-    poll.votes.forEach((vote) => {
-      if (counts[vote.candidate]) {
-        counts[vote.candidate] += 1;
-      }
-    });
-
-    return counts;
-  }, [poll]);
+const ResultDialog = ({ open, setOpen }) => {
+  const {selectedPoll} = useSelector((store) => store.polls);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -35,15 +22,15 @@ const ResultDialog = ({ open, setOpen, poll }) => {
           bg-white dark:bg-zinc-900 space-y-6"
       >
         <DialogTitle className="text-2xl font-bold text-zinc-800 dark:text-zinc-100">
-          Poll Results for {poll.title}
+          Poll Results for {selectedPoll?.title}
         </DialogTitle>
 
         <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-          <p>Description: {poll.description}</p>
+          <p>Description: {selectedPoll?.description}</p>
         </DialogDescription>
 
         {/* 🧾 Candidate list with vote counts */}
-        <div className="space-y-3 mt-4">
+        {/* <div className="space-y-3 mt-4">
           {poll.candidates.map((cand) => (
             <div
               key={cand._id}
@@ -60,7 +47,7 @@ const ResultDialog = ({ open, setOpen, poll }) => {
               </span>
             </div>
           ))}
-        </div>
+        </div> */}
       </DialogContent>
     </Dialog>
   );

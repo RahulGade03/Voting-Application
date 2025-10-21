@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
 const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
-const PollStatusEnum = ["ongoing", "completed"];
 
 const pollSchema = new mongoose.Schema({
   pollId: { type: String, default: uuidv4, unique: true },
@@ -11,26 +10,20 @@ const pollSchema = new mongoose.Schema({
   candidates: [
     { type: mongoose.Schema.Types.ObjectId, ref: "Voter", required: true }
   ],
-  voters: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "Voter" }
-  ],
-  votes: [
-    {
-      candidateId: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: "Voter",
-        validate: {
-          validator: function(candidateId) {
-            // Ensure candidateId exists in this poll's candidates array
-            return this.candidates.includes(candidateId);
-          },
-          message: "candidateId must be one of the candidates of this poll."
-        }
-      },
-      voterId: { type: mongoose.Schema.Types.ObjectId, ref: "Voter" }
-    }
-  ],
-  eligibleSchool: { type: [String], enum: SchoolEnum, required: true },
+  votes: [{
+    candidateId: { 
+      type: mongoose.Schema.Types.ObjectId, ref: "Voter",
+      validate: {
+        validator: function(candidateId) {
+          // Ensure candidateId exists in this poll's candidates array
+          return this.candidates.includes(candidateId);
+        },
+        message: "candidateId must be one of the candidates of this poll."
+      }
+    },
+    voterHash: { type: String, ref: "Voter" }
+  }],
+  eligibleSchools: { type: [String], enum: SchoolEnum, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Admin", required: true }

@@ -24,7 +24,9 @@ const LeftSideBarAdmin = () => {
     { icon: <Home className="w-5 h-5" />, text: "Home" },
     { icon: <PlusSquare className="w-5 h-5" />, text: "Create Poll" },
     { icon: <Newspaper className="w-5 h-5" />, text: "My Posted Polls" },
-    { icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" },
+    ...(admin.access === "ALL"
+    ? [{ icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" }]
+    : []),
     { icon: <Users className="w-5 h-5" />, text: "Register Voter" },
     { icon: <Search className="w-5 h-5" />, text: "Search Voter" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },
@@ -50,6 +52,9 @@ const LeftSideBarAdmin = () => {
       if (admin.access === 'all') {
         navigate("add-admin");
       }
+    }
+    if (text === "Register Admin") {
+      navigate("add-admin");
     }
     if (text === "Logout") {
       logoutHandler();

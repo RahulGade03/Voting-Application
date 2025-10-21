@@ -8,7 +8,8 @@ const adminSchema = new mongoose.Schema({
   password: { type: String, required: true },
   createdPolls: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poll" }],
   school: {type: String, enum: SchoolEnum, required: true},
-  access: {type: String, enum: SchoolEnum, required: true}
+  access: {type: String, enum: SchoolEnum, required: true},
+  mustChangePassword: {type: Boolean, defalut: false}
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

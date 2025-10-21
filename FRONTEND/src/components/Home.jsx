@@ -5,5 +5,5 @@ const Home = () => {
     <div>Home</div>
   )
 }
-
+// To see the available polls, also send the hash of metamaskId so that the polls will be compared in the backend
 export default Home
