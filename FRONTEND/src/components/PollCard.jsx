@@ -11,12 +11,19 @@ const PollCard = ({ poll }) => {
   const handleViewResults = async () => {
     let res;
     if (voter !== null) {
-      res = await fetch(`http://localhost:5000/voter/poll-results/${poll._id}`);
+      res = await fetch(`http://localhost:5000/voter/poll-result/${poll.pollId}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
     }
     else if (admin !== null) {
-      res = await fetch(`http://localhost:5000/admin/poll-results/${poll._id}`);
+      res = await fetch(`http://localhost:5000/admin/poll-result/${poll.pollId}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
     }
     const data = await res.json();
+    console.log(data);
     const pollData = {
       ...data,
       title: poll.title,
@@ -43,7 +50,7 @@ const PollCard = ({ poll }) => {
         </div>
       </div>
 
-      { (Date.now()>poll.startDate) ? <button
+      { (new Date().toISOString()>new Date(poll.endDate).toISOString()) ? <button
         onClick={handleViewResults}
         className="mt-4 w-full py-2 px-4 bg-indigo-600 text-white rounded-xl font-medium text-sm hover:bg-indigo-700 transition-colors"
       >

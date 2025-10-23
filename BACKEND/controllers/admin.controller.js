@@ -190,7 +190,7 @@ export const pollList = async (req, res) => {
 export const pollResult = async (req, res) => {
   try {
     const pollId = req.params.pollId;
-    let poll = await Poll.findOne({ pollId: pollId }).populate({path: 'candidates', select: 'name emailId _id'}).lean();
+    let poll = await Poll.findOne({ pollId: pollId }).populate([{path: 'candidates', select: 'name emailId _id'}, {path: 'createdBy', select: 'name emailId'}]).lean();
     if (!poll) return  res.status(404).json({ error: "Poll not found", success: false });
 
     // Call smart contract function (returns array of votes)
