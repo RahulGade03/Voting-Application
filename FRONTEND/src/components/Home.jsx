@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import PollCard from "./PollCard";
+import PollCardVoter from "./PollCardVoter";
 import { setCreatedPolls } from "@/redux/pollSlice";
 
 const Home = () => {
@@ -28,16 +28,22 @@ const Home = () => {
     fetchOngoingPolls();
   }, [dispatch]);
 
+  const today = new Date();
+
+  // Only show polls where endDate is in the future
+  const ongoingPolls = createdPolls
+    ? createdPolls.filter((poll) => new Date(poll.endDate) > today)
+    : [];
+
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-6xl mx-auto ml-96">
       <h2 className="text-3xl font-semibold mb-6 text-gray-900 dark:text-gray-100">
         Ongoing Polls
       </h2>
-
-      {createdPolls && createdPolls.length > 0 ? (
+      {ongoingPolls && ongoingPolls.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {createdPolls.map((poll) => (
-            <PollCard key={poll._id} poll={poll} />
+          {ongoingPolls.map((poll) => (
+            <PollCardVoter key={poll._id} poll={poll} />
           ))}
         </div>
       ) : (

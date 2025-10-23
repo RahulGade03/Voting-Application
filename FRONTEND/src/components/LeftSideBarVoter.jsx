@@ -22,7 +22,7 @@ const LeftSideBarVoter = () => {
       text: `Hello, ${voter.name.split(" ")[0]}`,
     },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
-    { icon: <ListTodo className="w-5 h-5" />, text: "My Voted Polls" },
+    { icon: <ListTodo className="w-5 h-5" />, text: "Poll Results" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },
   ];
 
