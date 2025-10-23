@@ -54,21 +54,19 @@ export const availablePolls = async (req, res) => {
     // Extract voter from JWT (authMiddleware should set req.voterId)
     const voter = await Voter.findById(req.id).select('-password');
     if (!voter) return res.status(404).json({ error: "Voter not found" });
-    const voterHash = req.query.voterHash;
     const now = new Date();
-
+    // console.log(voter);
     // Fetch all polls where voter is eligible and still ongoing
     let polls = await Poll.find({
       eligibleSchools: { $in: [voter.school] },
       endDate: { $gt: now },
     });
 
-    // Filter out polls where voter has already voted (on-chain check)
+    // console.log(polls);
     const votedPolls = polls.filter((poll) =>
-      voter.pollsVoted.some(
-        (id) => id.toString() === poll.pollId.toString()
-      )
+      !voter.pollsVoted.some((id) => id.toString() === poll.pollId.toString())
     );
+    // console.log(votedPolls);
 
     res.status(201).json({ polls: votedPolls, success: true });
   } catch (err) {
