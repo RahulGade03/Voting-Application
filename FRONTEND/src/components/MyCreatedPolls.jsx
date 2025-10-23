@@ -7,13 +7,17 @@ const MyCreatedPolls = () => {
   useGetMyCreatedPolls();
   const { createdPolls } = useSelector((store) => store.polls);
 
+  if (!createdPolls) {
+    return <div className="p-6 ml-64 text-gray-500">Loading your polls...</div>;
+  }
+
   return (
-    <div className="p-6 ml-64"> {/* <-- margin-left matches sidebar width */}
+    <div className="p-6 ml-64">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         My Created Polls
       </h2>
 
-      {createdPolls?.length === 0 ? (
+      {createdPolls.length === 0 ? (
         <p className="text-gray-500">You haven’t created any polls yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
