@@ -60,7 +60,7 @@ export const availablePolls = async (req, res) => {
     let polls = await Poll.find({
       eligibleSchools: { $in: [voter.school] },
       endDate: { $gt: now },
-    });
+    }).populate([{path: 'candidates', select: 'name emailId'}, {path: 'createdBy', select: 'name emailId'}]);
 
     // console.log(polls);
     const votedPolls = polls.filter((poll) =>
