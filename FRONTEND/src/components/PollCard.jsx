@@ -9,7 +9,7 @@ function formatDate(dateStr) {
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth()+1).padStart(2, "0");
   const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+  return `${month}/${day}/${year}`;
 }
 
 const PollCard = ({ poll }) => {
@@ -17,6 +17,7 @@ const PollCard = ({ poll }) => {
   const dispatch = useDispatch();
   const { voter, admin } = useSelector((store) => store.auth);
 
+  // console.log(poll);
   const handleViewResults = async () => {
     let res;
     if (voter !== null) {
@@ -42,6 +43,7 @@ const PollCard = ({ poll }) => {
   }
 
   const pollEnded = new Date() > new Date(poll.endDate);
+  // console.log(new Date(), poll.endDate, new Date(poll.endDate));
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">

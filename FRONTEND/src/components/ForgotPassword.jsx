@@ -17,7 +17,7 @@ const ForgotPassword = () => {
           
           let res;
           if (role === 'voter') {
-            console.log("Submitting forgot password for voter");
+            // console.log("Submitting forgot password for voter");
            res = await fetch('http://localhost:5000/voter/forgot-password', {
                 method: 'POST',
                 headers: {
@@ -25,7 +25,7 @@ const ForgotPassword = () => {
                 },
                 body: JSON.stringify({emailId: email}) 
             });
-            console.log("Response received from voter forgot password endpoint");
+            // console.log("Response received from voter forgot password endpoint");
         }
         else if (role === 'admin') {
             res = await fetch('http://localhost:5000/admin/forgot-password', {
@@ -38,7 +38,7 @@ const ForgotPassword = () => {
         }
         
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if (data.success) {
           navigate('/');
         }

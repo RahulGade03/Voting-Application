@@ -178,7 +178,7 @@ Please login and change your password immediately.
 /* -------------------- 5) List Polls Created by Admin -------------------- authmiddleware */
 export const pollList = async (req, res) => {
   try {
-    let polls = await Poll.find({ createdBy: req.id }).select('-candidates -votes -eligibleSchools');
+    let polls = await Poll.find({ createdBy: req.id }).populate([{path: 'candidates', select: 'name emailId _id'}, {path: 'createdBy', select: 'name emailId'}]).lean();
     res.status(200).json({ polls, success: true });
   } catch (err) {
     console.error("pollList error:", err);

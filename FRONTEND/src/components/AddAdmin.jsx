@@ -20,7 +20,7 @@ const AddAdmin = () => {
         credentials: 'include'
       })
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         alert('Voter Registered Successfully');
         // use toast

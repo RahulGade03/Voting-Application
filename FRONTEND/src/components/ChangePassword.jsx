@@ -63,7 +63,7 @@ const ChangePassword = () => {
           throw new Error(data.error);
         }
       }
-      console.log('Password changed successfully');
+      // console.log('Password changed successfully');
       dispatch(setAdmin(null));
       dispatch(setVoter(null));
       navigate('/');

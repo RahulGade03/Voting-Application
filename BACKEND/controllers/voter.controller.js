@@ -52,7 +52,7 @@ export const voterLogout = async (req, res) => {
 export const availablePolls = async (req, res) => {
   try {
     // Extract voter from JWT (authMiddleware should set req.voterId)
-    const voter = await Voter.findById(req.id).select('school endDate');
+    const voter = await Voter.findById(req.id).select('-password');
     if (!voter) return res.status(404).json({ error: "Voter not found" });
     const voterHash = req.query.voterHash;
     const now = new Date();
@@ -64,25 +64,13 @@ export const availablePolls = async (req, res) => {
     });
 
     // Filter out polls where voter has already voted (on-chain check)
-    const availablePolls = [];
-    for (const poll of polls) {
-      const votes = await contract.methods.getVotesByPoll(poll.pollId).call();
-      const hasVoted = votes.some(
-        (vote) => vote.voter === voterHash
-      );
+    const votedPolls = polls.filter((poll) =>
+      voter.pollsVoted.some(
+        (id) => id.toString() === poll.pollId.toString()
+      )
+    );
 
-      if (!hasVoted) {
-        availablePolls.push({
-          pollId: poll.pollId,
-          title: poll.title,
-          description: poll.description,
-          endDate: poll.duration.endDate,
-          eligibleSchools: poll.eligibleSchools,
-        });
-      }
-    }
-
-    res.status(201).json({ polls: availablePolls, success: true });
+    res.status(201).json({ polls: votedPolls, success: true });
   } catch (err) {
     console.error("Error fetching available polls:", err);
     res.status(500).json({ error: "Failed to fetch polls", success: false });
@@ -146,18 +134,18 @@ export const myVotes = async (req, res) => {
 /* -------------------- 6) CHANGE PASSWORD -------------------- authmiddleware */
 export const changePassword = async (req, res) => {
   try {
-    console.log( "Change Password Request Received for Voter ID: " + req.id );
+    console.log("Change Password Request Received for Voter ID: " + req.id);
     const voter = await Voter.findById(req.id);
     if (!voter) {
       return res.status(404).json({ error: "Voter not found", success: false });
     }
-    console.log( "Voter found: " + voter );
+    console.log("Voter found: " + voter);
     const { newPassword } = req.body;
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     voter.password = hashedNewPassword;
     voter.mustChangePassword = false;
     await voter.save();
-    console.log( "Password changed successfully for Voter ID: " + req.id );
+    console.log("Password changed successfully for Voter ID: " + req.id);
     res.status(200).json({ message: "Password changed successfully", success: true });
   } catch (error) {
     res.status(500).json({ error: "Falied to change password", success: false });

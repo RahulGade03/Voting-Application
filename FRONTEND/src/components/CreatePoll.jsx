@@ -1,4 +1,5 @@
 import { setAdmin } from '@/redux/authSlice';
+import { setCreatedPolls } from '@/redux/pollSlice';
 import { Dialog, DialogContent, DialogTitle, DialogOverlay, DialogDescription } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,6 +16,7 @@ const CreatePoll = ({ open, setOpen }) => {
 
   const dispatch = useDispatch();
   const { admin } = useSelector((store) => store.auth);
+  const { createdPolls } = useSelector((store) => store.polls);
 
   const changeHandler = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -50,7 +52,7 @@ const CreatePoll = ({ open, setOpen }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    console.log(form);
+    // console.log(form);
     try {
       const res = await fetch('http://localhost:5000/admin/create-poll', {
         method: 'POST',
@@ -65,7 +67,7 @@ const CreatePoll = ({ open, setOpen }) => {
         credentials: 'include'
       })
       const data = await res.json();
-      console.log(data);
+      // console.log(data);
       if (data.success) {
         setOpen(false);
         setForm({
@@ -77,14 +79,17 @@ const CreatePoll = ({ open, setOpen }) => {
           createdBy: ''
         });
         const poll = data.poll;
-        const updatedPolls = [...admin.polls, poll ];
-        const updatedAdmin = {...admin, polls: updatedPolls};
+        const updatedPolls = [...createdPolls, poll ];
+        const updatedAdminPolls = [...admin.polls, poll.pollId];
+        const updatedAdmin = {...admin, polls: updatedAdminPolls};
         dispatch(setAdmin(updatedAdmin));
+        dispatch(setCreatedPolls(updatedPolls));
       }
     } catch (error) {
       console.log(error);
     }
   };
+  // console.log(admin);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
