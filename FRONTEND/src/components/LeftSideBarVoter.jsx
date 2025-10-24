@@ -30,7 +30,7 @@ const LeftSideBarVoter = () => {
     if (text === "Home") {
       navigate("");
     }
-    if (text === "My Voted Polls") {
+    if (text === "Poll Results") {
       navigate("my-voted-polls");
     }
     if (text === "Logout") {

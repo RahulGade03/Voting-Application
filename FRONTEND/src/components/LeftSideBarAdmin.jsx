@@ -23,7 +23,7 @@ const LeftSideBarAdmin = () => {
     },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
     { icon: <PlusSquare className="w-5 h-5" />, text: "Create Poll" },
-    { icon: <Newspaper className="w-5 h-5" />, text: "My Posted Polls" },
+    { icon: <Newspaper className="w-5 h-5" />, text: "My Created Polls" },
     ...(admin.access === "ALL"
     ? [{ icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" }]
     : []),
@@ -39,7 +39,7 @@ const LeftSideBarAdmin = () => {
     if (text === "Create Poll") {
       setOpen(true);
     }
-    if (text === "My Posted Polls") {
+    if (text === "My Created Polls") {
       navigate("my-created-polls");
     }
     if (text === "Register Voter") {
