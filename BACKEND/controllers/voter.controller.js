@@ -51,29 +51,29 @@ export const voterLogout = async (req, res) => {
 /* -------------------- 3) VIEW AVAILABLE POLLS -------------------- */
 export const availablePolls = async (req, res) => {
   try {
-    // Extract voter from JWT (authMiddleware should set req.voterId)
     const voter = await Voter.findById(req.id).select('-password');
     if (!voter) return res.status(404).json({ error: "Voter not found" });
-    const now = new Date();
-    // console.log(voter);
-    // Fetch all polls where voter is eligible and still ongoing
+
+    // Get all polls eligible for this voter's school
     let polls = await Poll.find({
-      eligibleSchools: { $in: [voter.school] },
-      endDate: { $gt: now },
-    }).populate([{path: 'candidates', select: 'name emailId'}, {path: 'createdBy', select: 'name emailId'}]);
+      eligibleSchools: { $in: [voter.school] }
+    }).populate([
+      { path: 'candidates', select: 'name emailId' },
+      { path: 'createdBy', select: 'name emailId' }
+    ]);
 
-    // console.log(polls);
-    const votedPolls = polls.filter((poll) =>
-      !voter.pollsVoted.some((id) => id.toString() === poll.pollId.toString())
+    // Filter out polls already voted (by MongoDB _id)
+    const notVotedPolls = polls.filter((poll) =>
+      !voter.pollsVoted.some((id) => id.toString() === poll._id.toString())
     );
-    // console.log(votedPolls);
 
-    res.status(201).json({ polls: votedPolls, success: true });
+    res.status(200).json({ polls: notVotedPolls, success: true });
   } catch (err) {
     console.error("Error fetching available polls:", err);
     res.status(500).json({ error: "Failed to fetch polls", success: false });
   }
 };
+
 
 /* -------------------- 4) VIEW POLL RESULTS (on-chain) -------------------- */
 export const pollResults = async (req, res) => {
