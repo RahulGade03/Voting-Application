@@ -79,23 +79,25 @@ export const availablePolls = async (req, res) => {
 export const pollResults = async (req, res) => {
   try {
     const pollId = req.params.pollId;
-    const votes = await contract.methods.getVotesByPoll(pollId).call();
+    let poll = await Poll.findOne({ pollId: pollId }).populate([{path: 'candidates', select: 'name emailId _id'}, {path: 'createdBy', select: 'name emailId'}]).lean();
+    if (!poll) return  res.status(404).json({ error: "Poll not found", success: false });
 
-    if (!votes || votes.length === 0) {
-      return res.status(404).json({ error: "No votes found for this poll" });
-    }
+    // Call smart contract function (returns array of votes)
+    const votes = await contract.methods.getVotesByPoll(pollId).call();
 
     // Count votes per candidate
     const results = {};
     votes.forEach((vote) => {
-      const candidate = vote.candidate.toLowerCase();
-      results[candidate] = (results[candidate] || 0) + 1;
+      const candidateAddr = vote.candidate.toLowerCase();
+      results[candidateAddr] = (results[candidateAddr] || 0) + 1;
     });
 
-    res.json({
-      pollId,
+    poll = {...poll, results};
+
+    res.status(200).json({
+      poll,
       totalVotes: votes.length,
-      results
+      success: true
     });
   } catch (err) {
     console.error("Error fetching poll results:", err);
@@ -103,12 +105,11 @@ export const pollResults = async (req, res) => {
   }
 };
 
-// implement this in frontend
-/* -------------------- 5) VIEW VOTED POLLS (on-chain) -------------------- */
+/* -------------------- 5) VIEW VOTED POLLS -------------------- */
 export const myVotes = async (req, res) => {
   try {
-    const voterAddress = req.id;
-    let votes = await contract.methods.getVotesByVoter(voterAddress).call();
+    const voter = Voterreq.id;
+    // let votes = await contract.methods.getVotesByVoter(voterAddress).call();
 
     if (!votes || votes.length === 0) {
       return res.status(404).json({ error: "No votes found for this voter", success: false });
