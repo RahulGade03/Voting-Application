@@ -195,9 +195,6 @@ export const pollResult = async (req, res) => {
 
     // Call smart contract function (returns array of votes)
     const votes = await contract.methods.getVotesByPoll(pollId).call();
-    // if (!votes) {
-    //   return res.status(404).json({ error: "No votes found for this poll", success: true });
-    // }
 
     // Count votes per candidate
     const results = {};
