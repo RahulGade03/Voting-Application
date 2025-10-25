@@ -17,7 +17,6 @@ const PollCard = ({ poll }) => {
   const dispatch = useDispatch();
   const { voter, admin } = useSelector((store) => store.auth);
 
-  // console.log(poll);
   const handleViewResults = async () => {
     let res;
     if (voter !== null) {
@@ -33,6 +32,7 @@ const PollCard = ({ poll }) => {
       });
     }
     const data = await res.json();
+    // console.log("Data: ", data);
     const pollData = {
       ...data,
       title: poll.title,

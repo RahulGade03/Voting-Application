@@ -17,7 +17,7 @@ export const voterLogin = async (req, res) => {
     if (!voter) return res.status(404).json({ error: "Voter not found", status: false });
 
     const isValid = await bcrypt.compare(password, voter.password);
-    console.log("Is Valid: " + isValid);
+    // console.log("Is Valid: " + isValid);
     if (!isValid) return res.status(401).json({ error: "Invalid credentials", status: false });
 
     const token = jwt.sign(
@@ -76,7 +76,7 @@ export const availablePolls = async (req, res) => {
 
 
 /* -------------------- 4) VIEW POLL RESULTS (on-chain) -------------------- */
-export const pollResults = async (req, res) => {
+export const pollResult = async (req, res) => {
   try {
     const pollId = req.params.pollId;
     let poll = await Poll.findOne({ pollId: pollId }).populate([{path: 'candidates', select: 'name emailId _id'}, {path: 'createdBy', select: 'name emailId'}]).lean();
@@ -101,32 +101,26 @@ export const pollResults = async (req, res) => {
     });
   } catch (err) {
     console.error("Error fetching poll results:", err);
-    res.status(500).json({ error: "Failed to fetch poll results" });
+    res.status(500).json({ err, status: false });
   }
 };
 
-/* -------------------- 5) VIEW VOTED POLLS -------------------- */
-export const myVotes = async (req, res) => {
+// /* -------------------- 5) VIEW VOTED POLLS -------------------- */
+export const myVotedPolls = async (req, res) => {
   try {
-    const voter = Voterreq.id;
-    // let votes = await contract.methods.getVotesByVoter(voterAddress).call();
+    const voter = await Voter.findById(req.id).select('-password');
+    if (!voter) return res.status(404).json({ error: "Voter not found" });
+    const school = voter.school;
 
-    if (!votes || votes.length === 0) {
-      return res.status(404).json({ error: "No votes found for this voter", success: false });
-    }
-
-    votes = await Promise.all(
-      votes.map(async (vote) => {
-        const poll = await Poll.findById(vote.pollId);
-        const endDate = poll.endDate;
-        return { ...vote, endDate };
-      })
-    )
-
-    res.status(200).json({ votes });
+    // Get all polls eligible for this voter's school
+    let polls = await Poll.find({
+      eligibleSchools: { $in: [school] }
+    }).select('_id pollId title description startDate endDate');
+    if (!polls) return res.status(404).json({ error: "No polls found" });
+    res.status(200).json({ polls, success: true });
   } catch (err) {
     console.error("Error fetching voted polls:", err);
-    res.status(500).json({ error: "Failed to fetch voted polls" });
+    res.status(500).json({ err, status: false });
   }
 };
 

@@ -3,8 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 const pollSlice = createSlice ({
     name: "poll",
     initialState: {
-        createdPolls:null,
-        selectedPoll:null
+        createdPolls: [],
+        selectedPoll: null,
+        votedPolls: [],
     },
     reducers: {
         setCreatedPolls: (state, action) => {
@@ -12,9 +13,12 @@ const pollSlice = createSlice ({
         },
         setSelectedPoll: (state, action) => {
             state.selectedPoll = action.payload;
+        },
+        setVotedPolls: (state, action) => {
+            state.votedPolls = action.payload;
         }
     }
 });
 
-export const {setCreatedPolls, setSelectedPoll} = pollSlice.actions;
+export const {setCreatedPolls, setSelectedPoll, setVotedPolls} = pollSlice.actions;
 export default pollSlice.reducer;

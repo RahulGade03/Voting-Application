@@ -40,7 +40,7 @@ const CreatePoll = ({ open, setOpen }) => {
       candidates: [...form.candidates, candInp],
     });
     setCandInp('');
-    console.log(form.candidates);
+    // console.log(form.candidates);
   };
 
   const removeCandidateHandler = (emailId) => {

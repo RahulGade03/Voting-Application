@@ -10,7 +10,7 @@ import { useSelector} from "react-redux";
 
 const ResultDialog = ({ open, setOpen }) => {
   const {selectedPoll} = useSelector((store) => store.polls);
-  console.log(selectedPoll);
+  // console.log(selectedPoll);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -27,7 +27,7 @@ const ResultDialog = ({ open, setOpen }) => {
         </DialogTitle>
 
         <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-          <p>Description: {selectedPoll?.description}</p>
+          Description: {selectedPoll?.description}
         </DialogDescription>
 
         {/* 🧾 Candidate list with vote counts */}
@@ -42,11 +42,8 @@ const ResultDialog = ({ open, setOpen }) => {
                   {cand.name}
                 </p>
                 <p className="text-xs text-gray-500">{cand.emailId}</p>
-                {/* <h1>{cand.result[cand._id.toLowerCase()] || 0}</h1> */}
+                <h1>Votes: {selectedPoll.poll.results[cand._id.toLowerCase()] || 0}</h1>
               </div>
-              {/* <span className="text-sm font-semibold text-indigo-600 dark:text-indigo-400">
-                {candidateVotes[cand._id] ?? 0} votes
-              </span> */}
             </div>
           ))}
         </div>

@@ -33,7 +33,7 @@ export default function LoginPage() {
           credentials: 'include' // include cookies in the request
         })
         const voterData = await voterRes.json();
-        console.log(voterData);
+        // console.log(voterData);
         if (voterData) {
           dispatch(setVoter(voterData.voter));
           if (voterData.voter.mustChangePassword) {
@@ -57,7 +57,7 @@ export default function LoginPage() {
           credentials: 'include'
         })
         const adminData = await adminRes.json();
-        console.log(adminData);
+        // console.log(adminData);
         if (adminData.admin) {
           dispatch(setAdmin(adminData.admin));
           if (adminData.admin.mustChangePassword) {
