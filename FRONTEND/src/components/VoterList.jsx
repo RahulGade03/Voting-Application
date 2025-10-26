@@ -1,6 +1,6 @@
 import React from "react";
 
-const VoterList = ({ voters, onViewInfo }) => {
+const VoterList = ({ voters, setSelectedVoter }) => {
   return (
     <ul className="divide-y divide-gray-300">
       {voters.map((voter) => (
@@ -13,7 +13,7 @@ const VoterList = ({ voters, onViewInfo }) => {
             <p className="text-gray-600 text-sm">{voter.emailId}</p>
           </div>
           <button
-            onClick={() => onViewInfo(voter)}
+            onClick={() => setSelectedVoter(voter)}
             className="px-3 py-1 text-white bg-slate-900 rounded hover:bg-teal-600"
           >
             View Info

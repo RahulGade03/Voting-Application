@@ -19,10 +19,11 @@ function formatDate(dateStr) {
 
 const VoteDialog = ({ open, setOpen }) => {
   const { selectedPoll } = useSelector((store) => store.polls);
+  const { voter } = useSelector((store) => store.auth);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
 
   // Placeholder for whether user has already voted (to be fetched from backend later)
-  const hasAlreadyVoted = selectedPoll.hasVoted ?? false;
+  const hasAlreadyVoted = voter.pollsVoted.some((pollId) => pollId.toString() === selectedPoll.pollId.toString());
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -39,11 +40,10 @@ const VoteDialog = ({ open, setOpen }) => {
         </DialogTitle>
 
         <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
-          <p>Description: {selectedPoll?.description}</p>
-          <p>
+          Description: {selectedPoll?.description}
+          
             <span className="font-medium text-gray-700 dark:text-gray-300">End Date:</span>{" "}
             {formatDate(selectedPoll?.endDate)}
-          </p>
         </DialogDescription>
 
         {!hasAlreadyVoted ? (

@@ -4,6 +4,7 @@ import { setCreatedPolls } from "../redux/pollSlice.js"
 
 const useGetMyCreatedPolls = () => {
     const dispatch = useDispatch();
+    
     useEffect(() => {
         const fetchCreatedPolls = async() => {
             try {
@@ -12,7 +13,6 @@ const useGetMyCreatedPolls = () => {
                     credentials: "include"
                 });
                 const data = await res.json();
-                // console.log(data);
                 if (data.success) {
                     dispatch(setCreatedPolls(data.polls));
                 }
@@ -23,4 +23,5 @@ const useGetMyCreatedPolls = () => {
         fetchCreatedPolls();
     }, []);
 }
+
 export default useGetMyCreatedPolls;

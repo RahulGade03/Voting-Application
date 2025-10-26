@@ -19,8 +19,8 @@ const AddAdmin = () => {
         body: JSON.stringify(form),
         credentials: 'include'
       })
+
       const data = await res.json();
-      // console.log(data);
       if (data.success) {
         alert('Voter Registered Successfully');
         // use toast
@@ -33,7 +33,7 @@ const AddAdmin = () => {
     }
   };
 
-  const onChange = (e) => {
+  const handleChange = (e) => {
     setForm({...form, [e.target.name]: e.target.value})
   }
 
@@ -51,7 +51,7 @@ const AddAdmin = () => {
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               name='name'
               value={form.name}
-              onChange={(e) => onChange(e)}
+              onChange={(e) => handleChange(e)}
             />
           </div>
 
@@ -61,7 +61,7 @@ const AddAdmin = () => {
             <select 
               name="school"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              onChange={(e) => onChange(e)}
+              onChange={(e) => handleChange(e)}
               value={form.school}
             >
               <option value="SCOPE">SCOPE</option>
@@ -78,7 +78,7 @@ const AddAdmin = () => {
               type="email"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               name='emailId'
-              onChange={(e) => onChange(e)}
+              onChange={(e) => handleChange(e)}
               value={form.emailId}
             />
           </div>
@@ -89,7 +89,7 @@ const AddAdmin = () => {
             <select 
               name="access"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-              onChange={(e) => onChange(e)}
+              onChange={(e) => handleChange(e)}
               value={form.access}
             >
               <option value="NONE" >NONE</option>

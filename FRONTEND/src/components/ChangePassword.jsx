@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Lock, User } from "lucide-react";
+import { Lock } from "lucide-react";
 
 const ChangePassword = () => {
   const [form, setForm] = useState({
@@ -30,7 +30,7 @@ const ChangePassword = () => {
         alert('New Password and Confirm New Password do not match');
         return;
       }
-      // check if user is admin or voter
+
       if (voter) {
         const res = await fetch('http://localhost:5000/voter/change-password', {
           method: 'POST',
@@ -63,7 +63,7 @@ const ChangePassword = () => {
           throw new Error(data.error);
         }
       }
-      // console.log('Password changed successfully');
+
       dispatch(setAdmin(null));
       dispatch(setVoter(null));
       navigate('/');
@@ -115,7 +115,7 @@ const ChangePassword = () => {
                 />
               </div>
 
-              {/* Login Button */}
+              {/* Change Password Button */}
               <Button
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"

@@ -10,7 +10,6 @@ import { useSelector} from "react-redux";
 
 const ResultDialog = ({ open, setOpen }) => {
   const {selectedPoll} = useSelector((store) => store.polls);
-  // console.log(selectedPoll);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

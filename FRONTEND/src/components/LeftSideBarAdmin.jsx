@@ -1,9 +1,9 @@
 import { Home, Search, PlusSquare, LogOut, Newspaper, UserPlus2, Users } from "lucide-react";
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom"; // if you are using react-router
+import { useNavigate } from "react-router-dom";
 import CreatePoll from "./CreatePoll";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { setAdmin, setVoter } from "@/redux/authSlice";
 
 const LeftSideBarAdmin = () => {
@@ -67,7 +67,7 @@ const LeftSideBarAdmin = () => {
       credentials: 'include'
     });
     const data = await res.json();
-    // console.log(data);
+    console.log(data);
     dispatch(setAdmin(null));
     dispatch(setVoter(null));
     navigate('/');

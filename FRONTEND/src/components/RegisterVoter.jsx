@@ -20,7 +20,6 @@ const RegisterVoter = () => {
         credentials: 'include'
       })
       const data = await res.json();
-      // console.log(data);
       if (data.success) {
         alert('Voter Registered Successfully');
         // use toast

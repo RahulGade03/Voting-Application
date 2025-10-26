@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,13 +9,22 @@ import { setAdmin, setVoter } from "@/redux/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("voter"); // default role
-
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const {voter, admin} = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  useEffect(() => {
+    if (voter) {
+      navigate("/voter");
+    }
+    if (admin) {
+      navigate("/admin");
+    }
+  }, [])
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState("voter");
+
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -32,8 +41,8 @@ export default function LoginPage() {
           }),
           credentials: 'include' // include cookies in the request
         })
+
         const voterData = await voterRes.json();
-        // console.log(voterData);
         if (voterData) {
           dispatch(setVoter(voterData.voter));
           if (voterData.voter.mustChangePassword) {
@@ -56,8 +65,8 @@ export default function LoginPage() {
           }),
           credentials: 'include'
         })
+
         const adminData = await adminRes.json();
-        // console.log(adminData);
         if (adminData.admin) {
           dispatch(setAdmin(adminData.admin));
           if (adminData.admin.mustChangePassword) {
@@ -153,6 +162,8 @@ export default function LoginPage() {
               </Button>
             </form>
           </CardContent>
+          
+          {/* Forgot Password */}
           <Link to={'/forgot-password'} className="text-gray-300 underline self-center">Forgot Password?</Link>
         </Card>
       </motion.div>

@@ -91,8 +91,12 @@ export const availablePolls = async (req, res) => {
     // The array method .some() checks if at least one element in the array meets a given condition.
     );
 
+    const availablePolls = notVotedPolls.filter((poll) => 
+      new Date(poll.endDate) > new Date()
+    );
+
     res.status(200).json({ 
-      polls: notVotedPolls, 
+      polls: availablePolls, 
       success: true 
     });
 

@@ -14,11 +14,12 @@ const SearchVoter = () => {
     // Load full voter list on mount
     const fetchVoters = async () => {
       try {
-        const res = await fetch("http://localhost:5000/admin/view-voters", {
+        const res = await fetch("http://localhost:5000/admin/view-voters?page=1", {
           method: "GET",
           credentials: "include",
         });
         const data = await res.json();
+        console.log();
         if (data.success) setVoters(data.voters);
       } catch (err) {
         console.error("Failed to fetch voters", err);
@@ -28,7 +29,7 @@ const SearchVoter = () => {
   }, []);
 
   useEffect(() => {
-    // Filter voters by name across all voters
+    // Filter voters by name across voters
     const filtered = voters.filter((v) =>
       v.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -59,7 +60,7 @@ const SearchVoter = () => {
       />
       <VoterList
         voters={currentVoters}
-        onViewInfo={setSelectedVoter}
+        setSelectedVoter={setSelectedVoter}
       />
       <div className="flex justify-between mt-4 text-gray-700">
         <button
@@ -84,10 +85,7 @@ const SearchVoter = () => {
         <VoterInfoDialog
           voter={selectedVoter}
           onClose={() => setSelectedVoter(null)}
-          onDelete={() => {
-            setSelectedVoter(null);
-            // Re-fetch voters or update list after delete (optional)
-          }}
+          onDelete={() => {setSelectedVoter(null);}}
         />
       )}
     </div>

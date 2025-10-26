@@ -35,12 +35,11 @@ const CreatePoll = ({ open, setOpen }) => {
 
   const handleCandidate = async () => {
     if (!candInp.trim()) return;
-    await setForm({
+    setForm({
       ...form,
       candidates: [...form.candidates, candInp],
     });
     setCandInp('');
-    // console.log(form.candidates);
   };
 
   const removeCandidateHandler = (emailId) => {
@@ -52,7 +51,6 @@ const CreatePoll = ({ open, setOpen }) => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
-    // console.log(form);
     try {
       const res = await fetch('http://localhost:5000/admin/create-poll', {
         method: 'POST',
@@ -60,8 +58,8 @@ const CreatePoll = ({ open, setOpen }) => {
         body: JSON.stringify(form),
         credentials: 'include'
       })
+
       const data = await res.json();
-      // console.log(data);
       if (data.success) {
         setOpen(false);
         setForm({
@@ -83,7 +81,6 @@ const CreatePoll = ({ open, setOpen }) => {
       console.log(error);
     }
   };
-  // console.log(admin);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

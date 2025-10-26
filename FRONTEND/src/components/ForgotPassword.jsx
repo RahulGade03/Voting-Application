@@ -7,48 +7,44 @@ import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
 
 const ForgotPassword = () => {
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('voter');
-    const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('voter');
+  const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-          
-          let res;
-          if (role === 'voter') {
-            // console.log("Submitting forgot password for voter");
-           res = await fetch('http://localhost:5000/voter/forgot-password', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": 'application/json'
-                },
-                body: JSON.stringify({emailId: email}) 
-            });
-            // console.log("Response received from voter forgot password endpoint");
-        }
-        else if (role === 'admin') {
-            res = await fetch('http://localhost:5000/admin/forgot-password', {
-                method: 'POST',
-                headers: {
-                  "Content-Type": 'application/json'
-                },
-                body: JSON.stringify({email})
-              });
-        }
-        
-        const data = await res.json();
-        // console.log(data);
-        if (data.success) {
-          navigate('/');
-        }
-        else {
-          throw new Error(data.error)
-        }
-      } catch (error) {
-        console.log(error);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      let res;
+      if (role === 'voter') {
+        res = await fetch('http://localhost:5000/voter/forgot-password', {
+          method: 'POST',
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ emailId: email })
+        });
       }
+      else if (role === 'admin') {
+        res = await fetch('http://localhost:5000/admin/forgot-password', {
+          method: 'POST',
+          headers: {
+            "Content-Type": 'application/json'
+          },
+          body: JSON.stringify({ email })
+        });
+      }
+
+      const data = await res.json();
+      if (data.success) {
+        navigate('/');
+      }
+      else {
+        throw new Error(data.error)
+      }
+    } catch (error) {
+      console.log(error);
     }
+  }
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
       <motion.div
@@ -85,22 +81,20 @@ const ForgotPassword = () => {
                   <button
                     type="button"
                     onClick={() => setRole("voter")}
-                    className={`flex-1 py-2 rounded-lg border transition ${
-                      role === "voter"
+                    className={`flex-1 py-2 rounded-lg border transition ${role === "voter"
                         ? "bg-teal-600 text-white border-teal-500"
                         : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     Voter
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("admin")}
-                    className={`flex-1 py-2 rounded-lg border transition ${
-                      role === "admin"
+                    className={`flex-1 py-2 rounded-lg border transition ${role === "admin"
                         ? "bg-teal-600 text-white border-teal-500"
                         : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     Admin
                   </button>

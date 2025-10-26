@@ -5,6 +5,6 @@ dotenv.config();
 
 const web3 = new Web3(process.env.WEB3_PROVIDER_URL);
 
-const contractAddress = process.env.CONTRACT_ADDRESS;
+const contractAddress = process.env.CONTRACT_ADDRESS; // remaining
 const contract = new web3.eth.Contract(ABI, contractAddress);
 export default contract;

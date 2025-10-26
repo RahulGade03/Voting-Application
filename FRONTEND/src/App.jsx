@@ -34,9 +34,18 @@ const browserRouter = createBrowserRouter([
       { path: 'my-voted-polls', element: <MyVotedPolls/> }
     ]
   },
-  { path: '/', element: <LoginPage /> },
-  { path: '/change-password', element: <ChangePassword /> },
-  { path: '/forgot-password', element: <ForgotPassword /> }
+  { 
+    path: '/', 
+    element: <LoginPage /> 
+  },
+  { 
+    path: '/change-password', 
+    element: <ChangePassword /> 
+  },
+  { 
+    path: '/forgot-password', 
+    element: <ForgotPassword /> 
+  }
 ]);
 
 function App() {

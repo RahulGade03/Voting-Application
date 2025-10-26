@@ -10,7 +10,12 @@ const ProtectedRoutes = ({children}) => {
             navigate ("/")
         }
     }, [])
-  return <>{children}</>
+
+  return (
+    <>
+        {children}
+    </>
+  )
 }
 
 export default ProtectedRoutes;

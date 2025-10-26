@@ -1,12 +1,11 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import PollCard from "./PollCard";
 import useGetMyVotedPolls from "../hooks/useGetMyVotedPolls.jsx";
 
 const MyVotedPolls = () => {
   const { votedPolls } = useSelector((store) => store.polls);
   useGetMyVotedPolls();
-  // console.log("VotedPolls: ", votedPolls);
 
   return (
     <div className="p-6 max-w-6xl mx-auto ml-96">

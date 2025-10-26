@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setSelectedPoll } from "@/redux/pollSlice";
 import VoteDialog from "./VoteDialog"; // new created dialog
 import ResultDialog from "./ResultDialog"; // existing result dialog
@@ -15,8 +15,6 @@ function formatDate(dateStr) {
 
 const PollCardVoter = ({ poll }) => {
   const [open, setOpen] = useState(false);
-  const now = new Date();
-  const isOngoing = new Date(poll.endDate) > now;
   const dispatch = useDispatch();
 
   return (
@@ -44,21 +42,12 @@ const PollCardVoter = ({ poll }) => {
           dispatch(setSelectedPoll(poll));
           setOpen(true);
         }}
-        className={`mt-4 w-full py-2 px-4 rounded-xl font-medium text-sm transition-colors ${
-          isOngoing
-            ? "bg-indigo-600 text-white hover:bg-indigo-700"
-            : "bg-green-600 text-white hover:bg-green-700"
-        }`}
+        className={`mt-4 w-full py-2 px-4 rounded-xl font-medium text-sm transition-colors bg-indigo-600 text-white hover:bg-indigo-700`}
       >
-        {isOngoing ? "View / Vote" : "View Result"}
+        View Result
       </button>
 
-      {/* Conditional Dialog Rendering */}
-      {isOngoing ? (
-        <VoteDialog open={open} setOpen={setOpen} />
-      ) : (
-        <ResultDialog open={open} setOpen={setOpen} />
-      )}
+      <VoteDialog open={open} setOpen={setOpen} />
     </div>
   );
 };

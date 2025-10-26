@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PollCardVoter from "./PollCardVoter";
-import { setCreatedPolls } from "@/redux/pollSlice";
+import { setAvailablePolls } from "@/redux/pollSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { createdPolls } = useSelector((state) => state.polls);
+  const { availablePolls } = useSelector((state) => state.polls);
 
   useEffect(() => {
     const fetchAllPolls = async () => {
@@ -16,7 +16,7 @@ const Home = () => {
         });
         const data = await response.json();
         if (data.success) {
-          dispatch(setCreatedPolls(data.polls));
+          dispatch(setAvailablePolls(data.polls));
         }
       } catch (error) {
         console.error("Error fetching polls:", error);
@@ -27,16 +27,13 @@ const Home = () => {
   }, [dispatch]);
 
   const now = new Date();
-  const ongoingPolls = createdPolls
-    ? createdPolls.filter((poll) => new Date(poll.endDate) > now)
-    : [];
 
   return (
     <div className="p-6 max-w-6xl mx-auto ml-96">
       <h2 className="text-3xl font-semibold mb-6">Ongoing Polls</h2>
-      {ongoingPolls.length > 0 ? (
+      {availablePolls.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ongoingPolls.map((poll) => (
+          {availablePolls.map((poll) => (
             <PollCardVoter key={poll._id} poll={poll} />
           ))}
         </div>
