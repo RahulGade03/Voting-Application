@@ -1,4 +1,4 @@
-import { Web3 } from "web3";
+import { Web3 } from "web3";    // web3 is a used to connect block-chain to our backend
 import ABI from "./ABI.json" with { type: "json" };
 import dotenv from "dotenv";
 dotenv.config();

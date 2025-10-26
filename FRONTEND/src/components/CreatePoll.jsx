@@ -57,13 +57,7 @@ const CreatePoll = ({ open, setOpen }) => {
       const res = await fetch('http://localhost:5000/admin/create-poll', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          title: form.title,
-          description: form.description,
-          candidates: form.candidates.map((email) => ({ emailId: email, name: '' })),
-          schools: form.schools,
-          endDate: form.endDate
-        }),
+        body: JSON.stringify(form),
         credentials: 'include'
       })
       const data = await res.json();

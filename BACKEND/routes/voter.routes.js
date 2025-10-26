@@ -1,6 +1,15 @@
 import  express from 'express';
 const voterRoutes = express.Router();
-import { voterLogin, voterLogout, availablePolls, pollResult, myVotedPolls, changePassword, forgotPassword } from '../controllers/voter.controller.js';
+
+import { 
+    voterLogin, 
+    voterLogout, 
+    availablePolls, 
+    pollResult, 
+    myVotedPolls, 
+    changePassword, 
+    forgotPassword 
+} from '../controllers/voter.controller.js';
 import authMiddleware from '../middlewares/authMiddleware.js';
 
 voterRoutes.route('/login').post(voterLogin);
