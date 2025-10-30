@@ -5,7 +5,7 @@ import { setAvailablePolls } from "@/redux/pollSlice";
 
 const Home = () => {
   const dispatch = useDispatch();
-  const { availablePolls } = useSelector((state) => state.polls);
+  const { availablePolls } = useSelector((store) => store.polls);
 
   useEffect(() => {
     const fetchAllPolls = async () => {

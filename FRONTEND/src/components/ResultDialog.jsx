@@ -41,7 +41,7 @@ const ResultDialog = ({ open, setOpen }) => {
                   {cand.name}
                 </p>
                 <p className="text-xs text-gray-500">{cand.emailId}</p>
-                <h1>Votes: {selectedPoll.poll.results[cand._id.toLowerCase()] || 0}</h1>
+                <h1>Votes: {selectedPoll.poll.results[cand.name] || 0}</h1>
               </div>
             </div>
           ))}

@@ -4,6 +4,7 @@ import { Home, LogOut, PlusSquare, ListTodo } from 'lucide-react';
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import WalletButton from './WalletButton';
 
 const LeftSideBarVoter = () => {
   const { voter } = useSelector((store) => store.auth);
@@ -70,6 +71,7 @@ const LeftSideBarVoter = () => {
           </div>
         ))}
       </div>
+      <WalletButton/>
 
       {/* Footer */}
       <div className="p-4 border-t border-slate-700 text-sm text-slate-400">

@@ -126,16 +126,18 @@ export const pollResult = async (req, res) => {
         success: false 
       });
     }
+    // console.log("poll: ", poll);
 
     // Call smart contract function (returns array of votes)
     const votes = await contract.methods.getVotesByPoll(pollId).call();
-
+    // console.log("votes: ", votes);
     // Count votes per candidate
     const results = {};
     votes.forEach((vote) => {
-      const candidateAddr = vote.candidate.toLowerCase();
-      results[candidateAddr] = (results[candidateAddr] || 0) + 1;
+      const candidate = vote.candidateName;
+      results[candidate] = (results[candidate] || 0) + 1;
     });
+    // console.log("results: ", results);
 
     poll = {...poll, results};
 
@@ -147,7 +149,7 @@ export const pollResult = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ 
-      error: err, 
+      error: err.toString(), 
       success: false 
     });
   }
@@ -170,6 +172,7 @@ export const myVotedPolls = async (req, res) => {
     let polls = await Poll.find({
       eligibleSchools: { $in: [school] }
     }).select('_id pollId title description startDate endDate');
+    
     if (!polls) {
       return res.status(404).json({ 
         error: "No polls found",
@@ -258,5 +261,16 @@ Best regards,
       error: "Failed to process forgot password", 
       success: false 
     });
+  }
+}
+
+/* -------------------- 2) CAST VOTE -------------------- */
+export const castVote = async (req, res) => {
+  try {
+    const { pollId, candidateId, candidatename, voterId, voterName } = req.body;
+    const res = await contract.methods.getVotesByPoll(pollId).call();
+    
+  } catch (error) {
+    console.log(error);
   }
 }

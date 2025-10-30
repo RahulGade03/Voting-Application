@@ -14,7 +14,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth: authSlice,
-    polls: pollSlice
+    polls: pollSlice,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -1,9 +1,10 @@
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setCreatedPolls } from "../redux/pollSlice.js"
 
 const useGetMyCreatedPolls = () => {
     const dispatch = useDispatch();
+    const { createdPolls } = useSelector((store) => store.polls);
     
     useEffect(() => {
         const fetchCreatedPolls = async() => {
@@ -21,7 +22,7 @@ const useGetMyCreatedPolls = () => {
             }
         }
         fetchCreatedPolls();
-    }, []);
+    }, [createdPolls]);
 }
 
 export default useGetMyCreatedPolls;

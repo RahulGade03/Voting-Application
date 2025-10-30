@@ -1,5 +1,33 @@
 [
 	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "pollId",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "candidateEmail",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "candidateName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "voterIdHash",
+				"type": "string"
+			}
+		],
+		"name": "castVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -15,10 +43,10 @@
 				"type": "bytes32"
 			},
 			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "candidate",
-				"type": "address"
+				"indexed": false,
+				"internalType": "string",
+				"name": "candidateEmail",
+				"type": "string"
 			},
 			{
 				"indexed": false,
@@ -28,14 +56,8 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "address",
-				"name": "voter",
-				"type": "address"
-			},
-			{
-				"indexed": false,
 				"internalType": "string",
-				"name": "voterName",
+				"name": "voterIdHash",
 				"type": "string"
 			},
 			{
@@ -55,39 +77,6 @@
 		"type": "event"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "pollId",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "candidate",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "candidateName",
-				"type": "string"
-			},
-			{
-				"internalType": "address",
-				"name": "voter",
-				"type": "address"
-			},
-			{
-				"internalType": "string",
-				"name": "voterName",
-				"type": "string"
-			}
-		],
-		"name": "castVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "getAllVotes",
 		"outputs": [
@@ -99,9 +88,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
-						"name": "candidate",
-						"type": "address"
+						"internalType": "string",
+						"name": "candidateEmail",
+						"type": "string"
 					},
 					{
 						"internalType": "string",
@@ -109,13 +98,8 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
-						"name": "voter",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
-						"name": "voterName",
+						"name": "voterIdHash",
 						"type": "string"
 					},
 					{
@@ -127,25 +111,6 @@
 				"internalType": "struct VotingRecorder.Vote[]",
 				"name": "",
 				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "voter",
-				"type": "address"
-			}
-		],
-		"name": "getVoteCountByVoter",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -188,9 +153,9 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
-						"name": "candidate",
-						"type": "address"
+						"internalType": "string",
+						"name": "candidateEmail",
+						"type": "string"
 					},
 					{
 						"internalType": "string",
@@ -198,64 +163,8 @@
 						"type": "string"
 					},
 					{
-						"internalType": "address",
-						"name": "voter",
-						"type": "address"
-					},
-					{
 						"internalType": "string",
-						"name": "voterName",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "timestamp",
-						"type": "uint256"
-					}
-				],
-				"internalType": "struct VotingRecorder.Vote[]",
-				"name": "",
-				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "voter",
-				"type": "address"
-			}
-		],
-		"name": "getVotesByVoter",
-		"outputs": [
-			{
-				"components": [
-					{
-						"internalType": "string",
-						"name": "pollId",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "candidate",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "candidateName",
-						"type": "string"
-					},
-					{
-						"internalType": "address",
-						"name": "voter",
-						"type": "address"
-					},
-					{
-						"internalType": "string",
-						"name": "voterName",
+						"name": "voterIdHash",
 						"type": "string"
 					},
 					{
@@ -280,9 +189,9 @@
 				"type": "string"
 			},
 			{
-				"internalType": "address",
-				"name": "voter",
-				"type": "address"
+				"internalType": "string",
+				"name": "voterIdHash",
+				"type": "string"
 			}
 		],
 		"name": "hasVotedInPoll",

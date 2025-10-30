@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useEffect, useState } from "react";
 import {
   Dialog,
   DialogOverlay,
@@ -7,6 +7,7 @@ import {
   DialogDescription,
 } from "@radix-ui/react-dialog";
 import { useSelector } from "react-redux";
+import { useWeb3 } from "@/context/Web3Context";
 
 // Utility function to format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -21,9 +22,43 @@ const VoteDialog = ({ open, setOpen }) => {
   const { selectedPoll } = useSelector((store) => store.polls);
   const { voter } = useSelector((store) => store.auth);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [hasAlreadyVoted, setHasAlreadyVoted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  
+  const { connect, contract, account, web3 } = useWeb3();
 
-  // Placeholder for whether user has already voted (to be fetched from backend later)
-  const hasAlreadyVoted = voter.pollsVoted.some((pollId) => pollId.toString() === selectedPoll.pollId.toString());
+  useEffect(() => {
+    const checkHasVoted = async () => {
+      let currContr = contract;
+      let currAcc = account;
+      let currWeb3 = web3;
+      if (!contract || !account) {
+        const {contractInstance, acc, w3} = await connect();
+        currContr = contractInstance;
+        currAcc = acc;
+        currWeb3 = w3;
+      }
+      const pollId = selectedPoll.pollId.trim().toLowerCase();
+      const voterIdHash = currWeb3.utils.soliditySha3(voter._id);
+      const hasVoted = await currContr?.methods.hasVotedInPoll(pollId, voterIdHash).call();
+      setHasAlreadyVoted(hasVoted);
+    }
+    checkHasVoted();
+  }, [selectedPoll, voter, contract, account])
+
+  const handleCast = async () => {
+    try {
+      setLoading(true);
+      const voterIdHash = web3.utils.soliditySha3(voter._id);
+      const res = await contract.methods.castVote(selectedPoll.pollId.trim().toLowerCase(), selectedCandidate.email, selectedCandidate.name, voterIdHash).send({ from: account });
+      setHasAlreadyVoted(true);
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,9 +76,9 @@ const VoteDialog = ({ open, setOpen }) => {
 
         <DialogDescription className="text-sm text-gray-500 dark:text-gray-400">
           Description: {selectedPoll?.description}
-          
-            <span className="font-medium text-gray-700 dark:text-gray-300">End Date:</span>{" "}
-            {formatDate(selectedPoll?.endDate)}
+
+          <span className="font-medium text-gray-700 dark:text-gray-300">End Date:</span>{" "}
+          {formatDate(selectedPoll?.endDate)}
         </DialogDescription>
 
         {!hasAlreadyVoted ? (
@@ -58,7 +93,7 @@ const VoteDialog = ({ open, setOpen }) => {
                     ${selectedCandidate?.id === cand._id ? "bg-indigo-100 dark:bg-indigo-900" : "bg-gray-50 dark:bg-zinc-800"}
                   `}
                   onClick={() =>
-                    setSelectedCandidate({ id: cand._id, name: cand.name })
+                    setSelectedCandidate({ id: cand._id, name: cand.name, email: cand.emailId })
                   }
                 >
                   <div>
@@ -81,15 +116,14 @@ const VoteDialog = ({ open, setOpen }) => {
             {/* Vote button */}
             <div className="flex justify-end mt-6">
               <button
-                disabled={!selectedCandidate}
-                onClick={() => alert("Vote submitted! (Functionality coming soon)")}
-                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${
-                  selectedCandidate
-                    ? "bg-indigo-600 hover:bg-indigo-700 text-white"
-                    : "bg-gray-400 text-gray-200 cursor-not-allowed"
-                }`}
+                disabled={!selectedCandidate || loading}
+                onClick={handleCast}
+                className={`px-6 py-2 rounded-lg font-semibold transition-colors ${selectedCandidate
+                  ? "bg-indigo-600 hover:bg-indigo-700 text-white"
+                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  }`}
               >
-                Cast Vote
+                {loading ? 'Please approve from metamask' : 'Cast Vote'}
               </button>
             </div>
           </>
@@ -105,4 +139,4 @@ const VoteDialog = ({ open, setOpen }) => {
   );
 };
 
-export default VoteDialog;
+export default memo(VoteDialog);

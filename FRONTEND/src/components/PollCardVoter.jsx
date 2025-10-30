@@ -44,7 +44,7 @@ const PollCardVoter = ({ poll }) => {
         }}
         className={`mt-4 w-full py-2 px-4 rounded-xl font-medium text-sm transition-colors bg-indigo-600 text-white hover:bg-indigo-700`}
       >
-        View Result
+        View / Vote
       </button>
 
       <VoteDialog open={open} setOpen={setOpen} />

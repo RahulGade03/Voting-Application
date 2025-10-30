@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import ResultDialog from "./ResultDialog";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedPoll } from "@/redux/pollSlice";
+import { useWeb3 } from "@/context/Web3Context";
 
 // Format date as dd/mm/yyyy
 function formatDate(dateStr) {
   const date = new Date(dateStr); // ex. dateStr = "2025-10-27T10:30:00Z"
   const day = String(date.getDate()).padStart(2, "0");  // getDate gives Day
-  const month = String(date.getMonth()+1).padStart(2, "0"); // getMonth returns 0-based month (0 - Jan)
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // getMonth returns 0-based month (0 - Jan)
   const year = date.getFullYear(); // getFullYear gives 4-digit year
   return `${day}/${month}/${year}`;
 }
@@ -16,29 +17,44 @@ const PollCard = ({ poll }) => {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const { voter, admin } = useSelector((store) => store.auth);
+  const { contract, connect, account, web3 } = useWeb3();
+  const [loading, setLoading] = useState(false);
+
 
   const handleViewResults = async () => {
-    let res;
-    if (voter !== null) {
-      res = await fetch(`http://localhost:5000/voter/poll-result/${poll.pollId}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+    try {
+      setLoading(true)
+      if (!contract) {
+        await connect();
+      }
+      let res;
+      if (voter !== null) {
+        res = await fetch(`http://localhost:5000/voter/poll-result/${poll.pollId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+      }
+      else if (admin !== null) {
+        res = await fetch(`http://localhost:5000/admin/poll-result/${poll.pollId}`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+      }
+      const data = await res.json();
+      console.log(data);
+      const pollData = {
+        ...data,
+        title: poll.title,
+        description: poll.description,
+      }
+
+      dispatch(setSelectedPoll(pollData));
+      setOpen(true);
+    } catch (error) {
+      console.log();
+    } finally {
+      setLoading(false);
     }
-    else if (admin !== null) {
-      res = await fetch(`http://localhost:5000/admin/poll-result/${poll.pollId}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-    }
-    const data = await res.json();
-    const pollData = {
-      ...data,
-      title: poll.title,
-      description: poll.description,
-    }
-    dispatch(setSelectedPoll(pollData));
-    setOpen(true);
   }
 
   const pollEnded = new Date() > new Date(poll.endDate);
@@ -62,14 +78,14 @@ const PollCard = ({ poll }) => {
       </div>
 
       {pollEnded ? (
-        <button
-          onClick={handleViewResults}
-          className="mt-4 w-full py-2 px-4 bg-indigo-600 text-white rounded-xl font-medium text-sm hover:bg-indigo-700 transition-colors"
-        >
-          View Results
-        </button>
+      <button
+        onClick={handleViewResults}
+        className = {`mt-4 w-full py-2 px-4 ${!loading ? "bg-indigo-600" : "bg-indigo-500"} text-white rounded-xl font-medium text-sm hover: ${!loading ? "bg-indigo-700" : "bg-indigo-500"} transition-colors`}
+      >
+        {!loading ?  "View Results" : "Please wait..."}
+      </button>
       ) : (
-        <p className="font-bold border-2 border-blue-600 p-1 m-2 rounded-2xl text-center">
+      <p className="font-bold border-2 border-blue-600 p-1 m-2 rounded-2xl text-center">
           Results not declared yet
         </p>
       )}

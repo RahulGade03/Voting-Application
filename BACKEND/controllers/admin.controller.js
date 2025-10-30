@@ -75,6 +75,9 @@ export const createPoll = async (req, res) => {
   try {
     const { title, description, candidates, schools, endDate } = req.body;
 
+    let ED = new Date(endDate);
+    ED.setDate(ED.getDate()+1);
+
     const candidatesIDs = await Promise.all(
       candidates.map(async (emailId) => {
         const voter = await Voter.findOne({ emailId })
@@ -101,7 +104,7 @@ export const createPoll = async (req, res) => {
       votes: [],
       eligibleSchools: schools,
       startDate: new Date(),
-      endDate: new Date(endDate),
+      endDate: ED,
       createdBy: req.id
     });
 
@@ -270,8 +273,8 @@ export const pollResult = async (req, res) => {
     // Count votes per candidate
     const results = {};
     votes.forEach((vote) => {
-      const candidateAddr = vote.candidate.toLowerCase();
-      results[candidateAddr] = (results[candidateAddr] || 0) + 1;
+      const candidate = vote.candidateName;
+      results[candidate] = (results[candidate] || 0) + 1;
     });
 
     poll = { ...poll, results };
