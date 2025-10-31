@@ -12,16 +12,16 @@ const LeftSideBarVoter = () => {
   const dispatch = useDispatch();
 
   const items = [
-    {
-      icon: (
-        <Avatar>
-          <AvatarFallback>
-            {(voter.name[0] + voter.name[1]).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      ),
-      text: `Hello, ${voter.name.split(" ")[0]}`,
-    },
+    // {
+    //   icon: (
+    //     <Avatar>
+    //       <AvatarFallback>
+    //         {(voter.name[0] + voter.name[1]).toUpperCase()}
+    //       </AvatarFallback>
+    //     </Avatar>
+    //   ),
+    //   text: `Hello, ${voter.name.split(" ")[0]}`,
+    // },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
     { icon: <ListTodo className="w-5 h-5" />, text: "Poll Results" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },

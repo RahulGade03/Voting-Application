@@ -13,14 +13,14 @@ const LeftSideBarAdmin = () => {
   const { admin } = useSelector((store) => store.auth);
 
   const items = [
-    {
-      icon: (
-        <Avatar>
-          <AvatarFallback>{(admin.name[0]+admin.name[1]).toUpperCase()}</AvatarFallback>
-        </Avatar>
-      ),
-      text: `Hello, ${admin.name.split(" ")[0]}`,
-    },
+    // {
+    //   icon: (
+    //     <Avatar>
+    //       <AvatarFallback>{(admin.name[0]+admin.name[1]).toUpperCase()}</AvatarFallback>
+    //     </Avatar>
+    //   ),
+    //   text: `Hello, ${admin.name.split(" ")[0]}`,
+    // },
     { icon: <Home className="w-5 h-5" />, text: "Home" },
     { icon: <PlusSquare className="w-5 h-5" />, text: "Create Poll" },
     { icon: <Newspaper className="w-5 h-5" />, text: "My Created Polls" },
