@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { toast } from 'react-toastify';
 
 const AddAdmin = () => {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     name: '',
     school: 'SCOPE',
@@ -12,6 +13,7 @@ const AddAdmin = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await fetch('http://localhost:5000/admin/register-voter', {
         method: 'POST',
         headers: {
@@ -31,6 +33,9 @@ const AddAdmin = () => {
     } catch (error) {
       toast.error(error)
       console.log(error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -106,9 +111,10 @@ const AddAdmin = () => {
           <div className="pt-4">
             <button 
               type="submit"
+              disabled= {loading ? true : false}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors"
             >
-              Register Admin
+              {loading ? "Please wail..." : "Register Admin"}
             </button>
           </div>
         </form>

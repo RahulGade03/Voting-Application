@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const CreatePoll = ({ open, setOpen }) => {
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -53,6 +54,7 @@ const CreatePoll = ({ open, setOpen }) => {
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const res = await fetch('http://localhost:5000/admin/create-poll', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -85,6 +87,8 @@ const CreatePoll = ({ open, setOpen }) => {
     } catch (error) {
       toast.error(error.message);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -202,9 +206,10 @@ const CreatePoll = ({ open, setOpen }) => {
           <div className="flex justify-end">
             <button
               type="submit"
+              disabled={loading ? true : false}
               className="px-6 py-2 rounded-lg bg-teal-600 text-white font-medium hover:bg-teal-700"
             >
-              Post Poll
+              {loading ? "Please wait..." : "Post Poll"}
             </button>
           </div>
         </form>
