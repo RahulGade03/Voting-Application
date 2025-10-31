@@ -31,7 +31,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       if (role === 'voter') {
-        const voterRes = await fetch ('http://localhost:5000/voter/login', {
+        const voterRes = await fetch ('https://votingapplicationbackend.vercel.app/voter/login', {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -59,7 +59,7 @@ export default function LoginPage() {
         }
       }
       else if (role === 'admin') {
-        const adminRes = await fetch ('http://localhost:5000/admin/login', {
+        const adminRes = await fetch ('https://votingapplicationbackend.vercel.app/admin/login', {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

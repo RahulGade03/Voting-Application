@@ -9,7 +9,7 @@ const useGetMyVotedPolls = () => {
     useEffect(() => {
         const fetchMyVotedPolls = async () => {
             try {
-                const res = await fetch("http://localhost:5000/voter/my-voted-polls", {
+                const res = await fetch("https://votingapplicationbackend.vercel.app/voter/my-voted-polls", {
                     method: "GET",
                     credentials: "include"
                 });

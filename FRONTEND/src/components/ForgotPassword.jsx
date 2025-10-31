@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     try {
       let res;
       if (role === 'voter') {
-        res = await fetch('http://localhost:5000/voter/forgot-password', {
+        res = await fetch('https://votingapplicationbackend.vercel.app/voter/forgot-password', {
           method: 'POST',
           headers: {
             "Content-Type": 'application/json'
@@ -26,7 +26,7 @@ const ForgotPassword = () => {
         });
       }
       else if (role === 'admin') {
-        res = await fetch('http://localhost:5000/admin/forgot-password', {
+        res = await fetch('https://votingapplicationbackend.vercel.app/admin/forgot-password', {
           method: 'POST',
           headers: {
             "Content-Type": 'application/json'

@@ -30,13 +30,13 @@ const PollCard = ({ poll }) => {
       }
       let res;
       if (voter !== null) {
-        res = await fetch(`http://localhost:5000/voter/poll-result/${poll.pollId}`, {
+        res = await fetch(`https://votingapplicationbackend.vercel.app/voter/poll-result/${poll.pollId}`, {
           method: 'GET',
           credentials: 'include',
         });
       }
       else if (admin !== null) {
-        res = await fetch(`http://localhost:5000/admin/poll-result/${poll.pollId}`, {
+        res = await fetch(`https://votingapplicationbackend.vercel.app/admin/poll-result/${poll.pollId}`, {
           method: 'GET',
           credentials: 'include',
         });

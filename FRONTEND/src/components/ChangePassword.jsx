@@ -33,7 +33,7 @@ const ChangePassword = () => {
       }
 
       if (voter) {
-        const res = await fetch('http://localhost:5000/voter/change-password', {
+        const res = await fetch('https://votingapplicationbackend.vercel.app/voter/change-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -49,7 +49,7 @@ const ChangePassword = () => {
         }
       }
       else if (admin) {
-        const res = await fetch('http://localhost:5000/voter/change-password', {
+        const res = await fetch('https://votingapplicationbackend.vercel.app/voter/change-password', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

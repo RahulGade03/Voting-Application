@@ -17,7 +17,7 @@ const SearchVoter = () => {
     // Load full voter list on mount
     const fetchVoters = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/admin/view-voters?page=${currentPage}`, {
+        const res = await fetch(`https://votingapplicationbackend.vercel.app/admin/view-voters?page=${currentPage}`, {
           method: "GET",
           credentials: "include",
         });
@@ -57,7 +57,7 @@ const SearchVoter = () => {
     try {
       setLoading(true);
       if (searchTerm.trim().length > 0) {
-        const res = await fetch(`http://localhost:5000/admin/view-voter-byname?searchString=${searchTerm}`, {
+        const res = await fetch(`https://votingapplicationbackend.vercel.app/admin/view-voter-byname?searchString=${searchTerm}`, {
           method: 'GET',
           credentials: "include",
         })

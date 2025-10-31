@@ -14,7 +14,7 @@ const RegisterVoter = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/admin/register-voter', {
+      const res = await fetch('https://votingapplicationbackend.vercel.app/admin/register-voter', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

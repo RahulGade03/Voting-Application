@@ -62,7 +62,7 @@ const LeftSideBarAdmin = () => {
   };
 
   const logoutHandler = async() => {
-    const res = await fetch ('http://localhost:5000/admin/logout', {
+    const res = await fetch ('https://votingapplicationbackend.vercel.app/admin/logout', {
       method: 'POST',
       credentials: 'include'
     });

@@ -55,7 +55,7 @@ const CreatePoll = ({ open, setOpen }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/admin/create-poll', {
+      const res = await fetch('https://votingapplicationbackend.vercel.app/admin/create-poll', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(form),

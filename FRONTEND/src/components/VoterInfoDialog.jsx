@@ -5,7 +5,7 @@ const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
   const handleDelete = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/admin/delete-voter/${voter._id}`,
+        `https://votingapplicationbackend.vercel.app/admin/delete-voter/${voter._id}`,
         {
           method: "DELETE",
           credentials: "include",
