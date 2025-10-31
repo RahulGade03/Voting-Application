@@ -18,10 +18,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
+connectDB()
+
 app.use("/admin", adminRoutes);
 app.use("/voter", voterRoutes);
 
-connectDB()
-app.listen(5000, () => {
-    console.log("Server running on port 5000")
-});
+app.get('/', (req, res) => {
+  res.send("Hello World!");
+})
+
+// app.listen(5000, () => {
+//     console.log("Server running on port 5000")
+// });
+
+export default app;
