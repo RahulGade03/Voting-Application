@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from "cookie-parser";
+import dotenv from 'dotenv'
+
+dotenv.config();
 
 import adminRoutes from "./routes/admin.routes.js";
 import voterRoutes from "./routes/voter.routes.js";
@@ -10,7 +13,7 @@ const app = express();
 
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:5173",  // frontend URL
+  origin: process.env.FRONTEND_URL,  // frontend URL
   credentials: true                 // allow cookies/authorization headers
 }));
 app.use(express.json());

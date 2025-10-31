@@ -19,7 +19,7 @@ export const adminLogin = async (req, res) => {
 
     const admin = await Admin.findOne({ emailId });
     if (!admin) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "Invalid email",
         success: false
       });
@@ -27,7 +27,7 @@ export const adminLogin = async (req, res) => {
 
     const isValid = await bcrypt.compare(password, admin.password);
     if (!isValid) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: "Invalid password",
         success: false
       });
@@ -35,8 +35,8 @@ export const adminLogin = async (req, res) => {
 
     const token = jwt.sign(
       { userId: admin._id, emailId: admin.emailId },
-      process.env.JWT_SECRET_KEY, 
-      {expiresIn: "1h"}
+      process.env.JWT_SECRET_KEY,
+      { expiresIn: "1h" }
     );
 
     const tempAdmin = {
@@ -49,13 +49,13 @@ export const adminLogin = async (req, res) => {
     }
 
     res.status(200)
-       .cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 60 * 1000 })
-       .json({ admin: tempAdmin, success: true });
-       
+      .cookie('token', token, { httpOnly: true, sameSite: 'strict', maxAge: 1 * 24 * 60 * 60 * 1000 })
+      .json({ admin: tempAdmin, success: true });
+
   } catch (err) {
-    res.status(500).json({ 
-      error: err.message, 
-      success: false 
+    res.status(500).json({
+      error: err.message,
+      success: false
     });
   }
 };
@@ -78,13 +78,13 @@ export const createPoll = async (req, res) => {
     const { title, description, candidates, schools, endDate } = req.body;
 
     let ED = new Date(endDate);
-    ED.setDate(ED.getDate()+1);
+    ED.setDate(ED.getDate() + 1);
 
     const candidatesIDs = await Promise.all(
       candidates.map(async (emailId) => {
         const voter = await Voter.findOne({ emailId })
         if (!voter) {
-            throw new Error(`Candidate with email ${emailId} not found`);
+          throw new Error(`Candidate with email ${emailId} not found`);
         }
         return voter._id;
       })
@@ -115,16 +115,16 @@ export const createPoll = async (req, res) => {
     // Link to admin
     await Admin.findByIdAndUpdate(req.id, { $push: { createdPolls: poll._id } });
 
-    res.status(201).json({ 
-      message: "Poll created successfully", 
-      poll, 
-      success: true 
+    res.status(201).json({
+      message: "Poll created successfully",
+      poll,
+      success: true
     });
 
   } catch (err) {
-    res.status(500).json({ 
-      error: err.message, 
-      success: false 
+    res.status(500).json({
+      error: err.message,
+      success: false
     });
   }
 };
@@ -163,16 +163,16 @@ Please login and change your password immediately.
 
     await sendCredentialsMail(emailId, text);
 
-    res.status(201).json({ 
+    res.status(201).json({
       message: "Voter registered successfully",
-      success: true 
+      success: true
     });
 
   } catch (err) {
-    res.status(500).json({ 
-      error: "Failed to register voter", 
-      details: err.message, 
-      success: false 
+    res.status(500).json({
+      error: "Failed to register voter",
+      details: err.message,
+      success: false
     });
   }
 };
@@ -182,9 +182,9 @@ export const registerAdmin = async (req, res) => {
   try {
     const superAdmin = await Admin.findOne({ _id: req.id });
     if (superAdmin.access !== "ALL") {
-      return res.status(403).josn({ 
-        error: "Access denied. Only super admins can register new admins.", 
-        success: false 
+      return res.status(403).josn({
+        error: "Access denied. Only super admins can register new admins.",
+        success: false
       });
     }
 
@@ -217,9 +217,9 @@ Please login and change your password immediately.
 
     await sendCredentialsMail(emailId, text);
 
-    res.status(201).json({ 
-      message: "Admin registered successfully",  
-      success: true 
+    res.status(201).json({
+      message: "Admin registered successfully",
+      success: true
     });
   } catch (err) {
     res.status(500).json({ error: "Failed to register admin", details: err.message, success: false });
@@ -229,22 +229,22 @@ Please login and change your password immediately.
 /* -------------------- 5) List Polls Created by Admin -------------------- authmiddleware */
 export const pollList = async (req, res) => {
   try {
-    let polls = await Poll.find({ 
-      createdBy: req.id 
+    let polls = await Poll.find({
+      createdBy: req.id
     }).populate([
-      { path: 'candidates', select: 'name emailId _id' }, 
+      { path: 'candidates', select: 'name emailId _id' },
       { path: 'createdBy', select: 'name emailId' }
     ]).lean();  // lean says: Don’t give me fancy Mongoose documents. Just give me plain JS objects — directly from MongoDB.
 
-    res.status(200).json({ 
-      polls, 
-      success: true 
+    res.status(200).json({
+      polls,
+      success: true
     });
-  
+
   } catch (err) {
-    res.status(500).json({ 
-      error: err.toString(), 
-      success: false 
+    res.status(500).json({
+      error: err.toString(),
+      success: false
     });
   }
 };
@@ -253,17 +253,17 @@ export const pollList = async (req, res) => {
 export const pollResult = async (req, res) => {
   try {
     const pollId = req.params.pollId;
-    let poll = await Poll.findOne({ 
-      pollId: pollId 
+    let poll = await Poll.findOne({
+      pollId: pollId
     }).populate([
-      { path: 'candidates', select: 'name emailId _id' }, 
+      { path: 'candidates', select: 'name emailId _id' },
       { path: 'createdBy', select: 'name emailId' }
     ]).lean();
 
     if (!poll) {
-      return res.status(404).json({ 
-        error: "Poll not found", 
-        success: false 
+      return res.status(404).json({
+        error: "Poll not found",
+        success: false
       });
     }
 
@@ -286,9 +286,10 @@ export const pollResult = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ 
-      error: err, 
-      success: false });
+    res.status(500).json({
+      error: err,
+      success: false
+    });
   }
 };
 
@@ -321,9 +322,9 @@ export const viewVoters = async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ 
-      error: "Failed to fetch voters", 
-      success: false 
+    res.status(500).json({
+      error: "Failed to fetch voters",
+      success: false
     });
   }
 };
@@ -334,88 +335,114 @@ export const viewVoter = async (req, res) => {
   try {
     const voter = await Voter.findById(req.params.id)
       .select('-password -pollsVoted');
-    
-      if (!voter) {
-        return res.status(404).json({ 
-          error: "Voter not found", 
-          success: false 
-        });
-      }
 
-    res.status(200).json({ voter, success: true });
-  
-  } catch (err) {
-    res.status(500).json({ 
-      error: "Failed to fetch voter", 
-      success: false 
-    });
-  }
-};
-
-/* -------------------- 9) Delete Voter -------------------- authmiddleware */
-export const deleteVoter = async (req, res) => {
-  try {
-    const voter = await Voter.findByIdAndDelete(req.params.id);
     if (!voter) {
-        return res.status(404).json({ 
+      return res.status(404).json({
         error: "Voter not found",
         success: false
       });
     }
-    
-    res.status(200).json({ 
-      voter, 
-      message: "Voter deleted successfully", 
-      success: true 
-    });
+
+    res.status(200).json({ voter, success: true });
 
   } catch (err) {
-    res.status(500).json({ 
-      error: "Failed to delete voter", 
-      success: false 
+    res.status(500).json({
+      error: "Failed to fetch voter",
+      success: false
     });
   }
 };
 
-/* -------------------- 10) Change Password -------------------- authmiddleware */
+/* -------------------- 9) Get Voter List by Name ---------- authmiddleware */
+
+export const getVoterListByName = async (req, res) => {
+  try {
+    const searchString = req.query.searchString;
+    const voters = await Voter.find({
+      name: { $regex: searchString, $options: "i" } // 'i' for case-insensitive
+    }).select("-password");
+    // console.log(voters);
+    if (voters.length == 0) {
+      return res.status(400).json({
+        error: "Voter not found!",
+        success: false
+      })
+    }
+
+    return res.status(200).json({
+      voters,
+      success: true
+    })
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/* -------------------- 10) Delete Voter -------------------- authmiddleware */
+export const deleteVoter = async (req, res) => {
+  try {
+    const voter = await Voter.findByIdAndDelete(req.params.id);
+    if (!voter) {
+      return res.status(404).json({
+        error: "Voter not found",
+        success: false
+      });
+    }
+
+    res.status(200).json({
+      voter,
+      message: "Voter deleted successfully",
+      success: true
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      error: "Failed to delete voter",
+      success: false
+    });
+  }
+};
+
+/* -------------------- 11) Change Password -------------------- authmiddleware */
 export const changePassword = async (req, res) => {
   try {
     const admin = await Admin.findById(req.id);
     if (!admin) {
-      return res.status(404).json({ 
-        error: "Admin not found", 
-        success: false 
+      return res.status(404).json({
+        error: "Admin not found",
+        success: false
       });
     }
-    
+
     const { newPassword } = req.body;
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     admin.password = hashedNewPassword;
     admin.mustChangePassword = false;
     await admin.save();
 
-    res.status(200).json({ 
-      message: "Password changed successfully", 
-      success: true 
+    res.status(200).json({
+      message: "Password changed successfully",
+      success: true
     });
-  
+
   } catch (error) {
-    res.status(500).json({ 
-      error: "Falied to change password", 
-      success: false 
+    res.status(500).json({
+      error: "Falied to change password",
+      success: false
     });
   }
 }
 
-/* -------------------- 11) Forgot Password -------------------- */
+/* -------------------- 12) Forgot Password -------------------- */
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const admin = await Admin.findOne({ emailId: email });
     if (!admin) {
-      return res.status(404).json({ 
-        error: "Admin not found", 
-        success: false 
+      return res.status(404).json({
+        error: "Admin not found",
+        success: false
       });
     }
 
@@ -424,7 +451,7 @@ export const forgotPassword = async (req, res) => {
     admin.password = hashedNewPassword;
     admin.mustChangePassword = true;
     await admin.save();
-    
+
     const text = `Hello ${admin.name},
 
 We received your request to reset your password. Your new password is provided below. This is a temporary password, so please log in and change it immediately.
@@ -440,16 +467,16 @@ Please login and change your password immediately.
 
     await sendCredentialsMail(email, text);
 
-    res.status(200).json({ 
-      message: "Password reset information sent to your email", 
-      success: true 
+    res.status(200).json({
+      message: "Password reset information sent to your email",
+      success: true
     });
-  
+
   }
   catch (error) {
-    res.status(500).json({ 
-      error: "Failed to process forgot password", 
-      success: false 
+    res.status(500).json({
+      error: "Failed to process forgot password",
+      success: false
     });
   }
 }
