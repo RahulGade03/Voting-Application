@@ -1,15 +1,8 @@
-import React, { useMemo } from "react";
-import {
-  Dialog,
-  DialogOverlay,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
-import { useSelector} from "react-redux";
+import { Dialog, DialogOverlay, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
+import { useSelector } from "react-redux";
 
 const ResultDialog = ({ open, setOpen }) => {
-  const {selectedPoll} = useSelector((store) => store.polls);
+  const { selectedPoll } = useSelector((store) => store.polls);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

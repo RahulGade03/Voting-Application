@@ -21,13 +21,13 @@ const RegisterVoter = () => {
       })
       const data = await res.json();
       if (data.success) {
-        alert('Voter Registered Successfully');
-        // use toast
+        toast.success(data.message);
       }
       else {
-        alert('Error in registering voter');
+        throw new Error(data.error);
       }
     } catch (error) {
+      toast(error.message);
       console.log(error);
     }
   };

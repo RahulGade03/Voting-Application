@@ -20,14 +20,16 @@ export const adminLogin = async (req, res) => {
     const admin = await Admin.findOne({ emailId });
     if (!admin) {
       return res.status(400).json({ 
-        error: "Invalid email" 
+        error: "Invalid email",
+        success: false
       });
     }
 
     const isValid = await bcrypt.compare(password, admin.password);
     if (!isValid) {
       return res.status(400).json({ 
-        error: "Invalid password" 
+        error: "Invalid password",
+        success: false
       });
     }
 
@@ -121,8 +123,7 @@ export const createPoll = async (req, res) => {
 
   } catch (err) {
     res.status(500).json({ 
-      error: "Failed to create poll", 
-      details: err.message, 
+      error: err.message, 
       success: false 
     });
   }
@@ -242,8 +243,7 @@ export const pollList = async (req, res) => {
   
   } catch (err) {
     res.status(500).json({ 
-      error: "Failed to fetch polls", 
-      details: err.message, 
+      error: err.toString(), 
       success: false 
     });
   }
@@ -358,7 +358,8 @@ export const deleteVoter = async (req, res) => {
     const voter = await Voter.findByIdAndDelete(req.params.id);
     if (!voter) {
         return res.status(404).json({ 
-        error: "Voter not found" 
+        error: "Voter not found",
+        success: false
       });
     }
     

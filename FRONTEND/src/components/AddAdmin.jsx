@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
 
 const AddAdmin = () => {
   const [form, setForm] = useState({
@@ -22,13 +23,13 @@ const AddAdmin = () => {
 
       const data = await res.json();
       if (data.success) {
-        alert('Voter Registered Successfully');
-        // use toast
+        toast.success(data.message);
       }
       else {
-        alert('Error in registering voter');
+        toast.error(data.error);
       }
     } catch (error) {
+      toast.error(error)
       console.log(error);
     }
   };

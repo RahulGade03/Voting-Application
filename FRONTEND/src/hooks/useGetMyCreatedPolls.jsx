@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setCreatedPolls } from "../redux/pollSlice.js"
+import { toast } from "react-toastify";
 
 const useGetMyCreatedPolls = () => {
     const dispatch = useDispatch();
@@ -17,7 +18,11 @@ const useGetMyCreatedPolls = () => {
                 if (data.success) {
                     dispatch(setCreatedPolls(data.polls));
                 }
+                else {
+                    throw new Error(data.error);
+                }
             } catch (error) {
+                toast.error(error.message);
                 console.log(error);
             }
         }

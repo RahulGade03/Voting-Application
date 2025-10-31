@@ -3,6 +3,7 @@ import ResultDialog from "./ResultDialog";
 import { useSelector, useDispatch } from "react-redux";
 import { setSelectedPoll } from "@/redux/pollSlice";
 import { useWeb3 } from "@/context/Web3Context";
+import { toast } from "react-toastify";
 
 // Format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -51,6 +52,7 @@ const PollCard = ({ poll }) => {
       dispatch(setSelectedPoll(pollData));
       setOpen(true);
     } catch (error) {
+      toast.error(error.message);
       console.log();
     } finally {
       setLoading(false);

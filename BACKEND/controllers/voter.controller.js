@@ -19,7 +19,7 @@ export const voterLogin = async (req, res) => {
     if (!voter) {
       return res.status(404).json({ 
         error: "Voter not found", 
-        status: false 
+        success: false 
       });
     }
 
@@ -27,7 +27,7 @@ export const voterLogin = async (req, res) => {
     if (!isValid) {
       return res.status(401).json({ 
         error: "Invalid credentials", 
-        status: false 
+        success: false 
       });
     }
 

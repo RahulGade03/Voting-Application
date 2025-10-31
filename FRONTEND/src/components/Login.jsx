@@ -7,6 +7,7 @@ import { Mail, Lock, User } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { setAdmin, setVoter } from "@/redux/authSlice";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -43,14 +44,18 @@ export default function LoginPage() {
         })
 
         const voterData = await voterRes.json();
-        if (voterData) {
+        if (voterData.success) {
           dispatch(setVoter(voterData.voter));
+          // toast.success("Login successful!");
           if (voterData.voter.mustChangePassword) {
             navigate('/change-password');
           }
           else {
             navigate('/voter');
           }
+        }
+        else {
+          throw new Error (voterData.error);
         }
       }
       else if (role === 'admin') {
@@ -67,8 +72,9 @@ export default function LoginPage() {
         })
 
         const adminData = await adminRes.json();
-        if (adminData.admin) {
+        if (adminData.success) {
           dispatch(setAdmin(adminData.admin));
+          // toast.success("Login successful!");
           if (adminData.admin.mustChangePassword) {
             navigate('/change-password');
           }
@@ -76,9 +82,13 @@ export default function LoginPage() {
             navigate('/admin');
           }
         }
+        else {
+          throw new Error(adminData.error);
+        }
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
+      console.log("Error: ", error);
     }
   };
 

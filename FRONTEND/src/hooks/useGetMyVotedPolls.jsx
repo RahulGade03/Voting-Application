@@ -1,6 +1,7 @@
 import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { setVotedPolls } from "@/redux/pollSlice";
+import { toast } from "react-toastify";
 
 const useGetMyVotedPolls = () => {
     const dispatch = useDispatch();
@@ -16,7 +17,11 @@ const useGetMyVotedPolls = () => {
                 if (data.success) {
                     dispatch(setVotedPolls(data.polls));
                 }
+                else {
+                    throw new Error(data.error);
+                }
             } catch (error) {
+                toast.error(error.message);
                 console.log(error);
             }
         }

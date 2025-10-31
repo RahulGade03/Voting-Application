@@ -3,8 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const authSlice = createSlice ({
     name: "auth",
     initialState: {
-        voter:null,
-        admin:null
+        voter:{},
+        admin:{}
     },
     reducers: {
         setAdmin: (state, action) => {

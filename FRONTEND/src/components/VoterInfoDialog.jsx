@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-toastify";
 
 const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
   const handleDelete = async () => {
@@ -12,12 +13,13 @@ const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
       );
       const data = await res.json();
       if (data.success) {
-        alert("Voter deleted successfully");
-        onDelete();
+        toast.success(data.message);
+        onClose()
       } else {
-        alert("Failed to delete voter");
+        throw new Error(data.error);
       }
     } catch (err) {
+      toast.error(error.message);
       console.error("Delete voter error:", err);
     }
   };

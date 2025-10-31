@@ -18,7 +18,11 @@ const Home = () => {
         if (data.success) {
           dispatch(setAvailablePolls(data.polls));
         }
+        else {
+          throw new Error (data.error);
+        }
       } catch (error) {
+        toast.error(error.message);
         console.error("Error fetching polls:", error);
       }
     };

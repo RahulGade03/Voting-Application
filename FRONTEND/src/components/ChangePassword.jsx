@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Lock } from "lucide-react";
+import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
   const [form, setForm] = useState({
@@ -27,7 +28,7 @@ const ChangePassword = () => {
     e.preventDefault();
     try {
       if (form.newPassword !== form.confirmNewPassword) {
-        alert('New Password and Confirm New Password do not match');
+        toast.error('New Password and Confirm New Password do not match');
         return;
       }
 
@@ -63,12 +64,13 @@ const ChangePassword = () => {
           throw new Error(data.error);
         }
       }
-
+      toast.success("Password change successfull!");
       dispatch(setAdmin(null));
       dispatch(setVoter(null));
       navigate('/');
     }
     catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   }

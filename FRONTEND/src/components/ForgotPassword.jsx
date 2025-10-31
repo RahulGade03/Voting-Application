@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
+import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -36,12 +37,14 @@ const ForgotPassword = () => {
 
       const data = await res.json();
       if (data.success) {
+        toast.success("Email sent to your account!");
         navigate('/');
       }
       else {
         throw new Error(data.error)
       }
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   }

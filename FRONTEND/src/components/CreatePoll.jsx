@@ -3,6 +3,7 @@ import { setCreatedPolls } from '@/redux/pollSlice';
 import { Dialog, DialogContent, DialogTitle, DialogOverlay, DialogDescription } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const CreatePoll = ({ open, setOpen }) => {
   const [form, setForm] = useState({
@@ -62,6 +63,7 @@ const CreatePoll = ({ open, setOpen }) => {
       const data = await res.json();
       if (data.success) {
         setOpen(false);
+        toast.success(data.message);
         setForm({
           title: '',
           description: '',
@@ -77,7 +79,11 @@ const CreatePoll = ({ open, setOpen }) => {
         dispatch(setAdmin(updatedAdmin));
         dispatch(setCreatedPolls(updatedPolls));
       }
+      else {
+        throw new Error(data.error);
+      }
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
   };

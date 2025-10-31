@@ -1,13 +1,8 @@
 import React, { memo, useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogOverlay,
-  DialogContent,
-  DialogTitle,
-  DialogDescription,
-} from "@radix-ui/react-dialog";
+import { Dialog, DialogOverlay, DialogContent, DialogTitle, DialogDescription } from "@radix-ui/react-dialog";
 import { useSelector } from "react-redux";
 import { useWeb3 } from "@/context/Web3Context";
+import { toast } from "react-toastify";
 
 // Utility function to format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -52,7 +47,9 @@ const VoteDialog = ({ open, setOpen }) => {
       const voterIdHash = web3.utils.soliditySha3(voter._id);
       const res = await contract.methods.castVote(selectedPoll.pollId.trim().toLowerCase(), selectedCandidate.email, selectedCandidate.name, voterIdHash).send({ from: account });
       setHasAlreadyVoted(true);
+      toast.success("Vote cast successful!");
     } catch (error) {
+      toast.error(error.message);
       console.log(error);
     }
     finally {

@@ -20,7 +20,8 @@ export const Web3Provider = ({ children }) => {
       setContract(contractInstance);
       return { web3Instance, contractInstance, acc: accounts[0], w3: web3Instance };
     } else {
-      alert("Please install MetaMask and setup Sepolia Test network to use this feature.");
+      toast.error("Please install MetaMask and setup Sepolia Test network to use this feature.");
+      // alert("Please install MetaMask and setup Sepolia Test network to use this feature.");
     }
   };
 
