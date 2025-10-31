@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import Web3 from 'web3';
 import ABI from "../blockchain/ABI.json" with { type: "json" };
+import { toast } from 'react-toastify';
 
 const Web3Context = createContext();
 

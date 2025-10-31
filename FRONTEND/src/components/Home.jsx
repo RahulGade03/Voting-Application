@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PollCardVoter from "./PollCardVoter";
 import { setAvailablePolls } from "@/redux/pollSlice";
+import { toast } from "react-toastify";
 
 const Home = () => {
   const dispatch = useDispatch();
