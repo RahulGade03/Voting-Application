@@ -63,9 +63,9 @@ const CreatePoll = ({ open, setOpen }) => {
       })
 
       const data = await res.json();
-      if (data.success) {
+      if (data?.success) {
         setOpen(false);
-        toast.success(data.message);
+        toast.success(data?.message);
         setForm({
           title: '',
           description: '',
@@ -74,7 +74,7 @@ const CreatePoll = ({ open, setOpen }) => {
           endDate: '',
           createdBy: ''
         });
-        const poll = data.poll;
+        const poll = data?.poll;
         const updatedPolls = [...createdPolls, poll ];
         const updatedAdminPolls = [...admin.polls, poll.pollId];
         const updatedAdmin = {...admin, polls: updatedAdminPolls};
@@ -82,10 +82,10 @@ const CreatePoll = ({ open, setOpen }) => {
         dispatch(setCreatedPolls(updatedPolls));
       }
       else {
-        throw new Error(data.error);
+        throw new Error(data?.error);
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
       console.log(error);
     } finally {
       setLoading(false);

@@ -60,8 +60,8 @@ const ChangePassword = () => {
           credentials: 'include'
         })
         const data = await res.json();
-        if (data.success === false) {
-          throw new Error(data.error);
+        if (data?.success === false) {
+          throw new Error(data?.error);
         }
       }
       toast.success("Password change successfull!");
@@ -70,7 +70,7 @@ const ChangePassword = () => {
       navigate('/');
     }
     catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
       console.log(error);
     }
   }

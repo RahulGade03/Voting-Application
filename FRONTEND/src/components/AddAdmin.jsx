@@ -24,11 +24,11 @@ const AddAdmin = () => {
       })
 
       const data = await res.json();
-      if (data.success) {
-        toast.success(data.message);
+      if (data?.success) {
+        toast.success(data?.message);
       }
       else {
-        toast.error(data.error);
+        toast.error(data?.error);
       }
     } catch (error) {
       toast.error(error)

@@ -36,15 +36,15 @@ const ForgotPassword = () => {
       }
 
       const data = await res.json();
-      if (data.success) {
+      if (data?.success) {
         toast.success("Email sent to your account!");
         navigate('/');
       }
       else {
-        throw new Error(data.error)
+        throw new Error(data?.error)
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
       console.log(error);
     }
   }
