@@ -88,7 +88,7 @@ npm run dev
   ]
 }
 ```
-### 🌐 3. Setup the MetaMask
+### 🌐 4. Setup the MetaMask
 ```bash
 create account at metamask
 update the settings to show the sepolia test network
