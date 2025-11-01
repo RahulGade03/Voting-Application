@@ -63,7 +63,7 @@ const ForgotPassword = () => {
         <Card className="shadow-xl rounded-2xl border border-slate-700 bg-slate-800/80 backdrop-blur-md">
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold text-center text-white mb-6">
-              Blockchain Voting System - Forgot Password
+              OpenBallot - Forgot Password
             </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Email */}
