@@ -14,14 +14,14 @@ const useGetMyVotedPolls = () => {
                     credentials: "include"
                 });
                 const data = await res.json();
-                if (data.success) {
-                    dispatch(setVotedPolls(data.polls));
+                if (data?.success) {
+                    dispatch(setVotedPolls(data?.polls));
                 }
                 else {
-                    throw new Error(data.error);
+                    throw new Error(data?.error);
                 }
             } catch (error) {
-                toast.error(error.message);
+                toast.error(error?.message);
                 console.log(error);
             }
         }

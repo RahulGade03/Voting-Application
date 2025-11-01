@@ -10,6 +10,8 @@ import { Lock } from "lucide-react";
 import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     newPassword: '',
     confirmNewPassword: ''
@@ -27,6 +29,7 @@ const ChangePassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       if (form.newPassword !== form.confirmNewPassword) {
         toast.error('New Password and Confirm New Password do not match');
         return;
@@ -72,6 +75,8 @@ const ChangePassword = () => {
     catch (error) {
       toast.error(error?.message);
       console.log(error);
+    } finally {
+      setAdmin.loading(false);
     }
   }
 
@@ -122,7 +127,7 @@ const ChangePassword = () => {
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"
               >
-                Change Password
+                {loading ? "Please wait..." : "Change Password"}
               </Button>
             </form>
           </CardContent>

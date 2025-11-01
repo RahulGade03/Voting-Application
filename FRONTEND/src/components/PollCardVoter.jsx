@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSelectedPoll } from "@/redux/pollSlice";
 import VoteDialog from "./VoteDialog"; // new created dialog
-import ResultDialog from "./ResultDialog"; // existing result dialog
 
 // Utility to format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -21,17 +20,17 @@ const PollCardVoter = ({ poll }) => {
     <div className="bg-white rounded-2xl shadow-md p-5 flex flex-col justify-between hover:shadow-lg transition-shadow duration-300">
       {/* Poll Information */}
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-2">{poll.title}</h3>
-        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{poll.description}</p>
+        <h3 className="text-lg font-semibold text-gray-800 mb-2">{poll?.title}</h3>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{poll?.description}</p>
 
         <div className="text-sm text-gray-500 space-y-1">
           <p>
             <span className="font-medium text-gray-700">Start:</span>{" "}
-            {formatDate(poll.startDate)}
+            {formatDate(poll?.startDate)}
           </p>
           <p>
             <span className="font-medium text-gray-700">End:</span>{" "}
-            {formatDate(poll.endDate)}
+            {formatDate(poll?.endDate)}
           </p>
         </div>
       </div>

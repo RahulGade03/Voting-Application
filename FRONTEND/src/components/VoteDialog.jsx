@@ -84,7 +84,7 @@ const VoteDialog = ({ open, setOpen }) => {
             <div className="space-y-3 mt-4">
               {selectedPoll?.candidates?.map((cand) => (
                 <div
-                  key={cand._id}
+                  key={cand?._id}
                   className={`flex justify-between items-center p-3 rounded-lg border cursor-pointer transition
                     border-gray-200 dark:border-gray-700 
                     ${selectedCandidate?.id === cand._id ? "bg-indigo-100 dark:bg-indigo-900" : "bg-gray-50 dark:bg-zinc-800"}
@@ -94,13 +94,13 @@ const VoteDialog = ({ open, setOpen }) => {
                   }
                 >
                   <div>
-                    <p className="font-medium text-gray-800 dark:text-gray-100">{cand.name}</p>
-                    <p className="text-xs text-gray-500">{cand.emailId}</p>
+                    <p className="font-medium text-gray-800 dark:text-gray-100">{cand?.name}</p>
+                    <p className="text-xs text-gray-500">{cand?.emailId}</p>
                   </div>
                   <input
                     type="radio"
                     name="candidate"
-                    checked={selectedCandidate?.id === cand._id}
+                    checked={selectedCandidate?.id === cand?._id}
                     onChange={() =>
                       setSelectedCandidate({ id: cand._id, name: cand.name })
                     }

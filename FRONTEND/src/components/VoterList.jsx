@@ -3,14 +3,14 @@ import React from "react";
 const VoterList = ({ voters, setSelectedVoter }) => {
   return (
     <ul className="divide-y divide-gray-300">
-      {voters.map((voter) => (
+      {voters?.map((voter) => (
         <li
-          key={voter._id}
+          key={voter?._id}
           className="flex items-center justify-between py-3"
         >
           <div>
-            <p className="font-medium text-gray-900">{voter.name}</p>
-            <p className="text-gray-600 text-sm">{voter.emailId}</p>
+            <p className="font-medium text-gray-900">{voter?.name}</p>
+            <p className="text-gray-600 text-sm">{voter?.emailId}</p>
           </div>
           <button
             onClick={() => setSelectedVoter(voter)}

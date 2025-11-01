@@ -8,6 +8,7 @@ import { Mail, User } from "lucide-react";
 import { toast } from 'react-toastify';
 
 const ForgotPassword = () => {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('voter');
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       let res;
       if (role === 'voter') {
         res = await fetch('https://votingapplicationbackend.vercel.app/voter/forgot-password', {
@@ -46,6 +48,8 @@ const ForgotPassword = () => {
     } catch (error) {
       toast.error(error?.message);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   }
   return (
@@ -109,7 +113,7 @@ const ForgotPassword = () => {
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"
               >
-                Submit
+                { loading ? "Please wait..." :  "Submit"}
               </Button>
             </form>
           </CardContent>

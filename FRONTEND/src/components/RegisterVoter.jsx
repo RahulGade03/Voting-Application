@@ -23,14 +23,14 @@ const RegisterVoter = () => {
         credentials: 'include'
       })
       const data = await res.json();
-      if (data.success) {
-        toast.success(data.message);
+      if (data?.success) {
+        toast.success(data?.message);
       }
       else {
-        throw new Error(data.error);
+        throw new Error(data?.error);
       }
     } catch (error) {
-      toast(error.message);
+      toast(error?.message);
       console.log(error);
     }
     finally {

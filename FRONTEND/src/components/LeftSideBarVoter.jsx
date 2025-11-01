@@ -60,14 +60,14 @@ const LeftSideBarVoter = () => {
 
       {/* Menu Items */}
       <div className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <div
             key={index}
-            onClick={() => mapHandler(item.text)}
+            onClick={() => mapHandler(item?.text)}
             className="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-800 transition"
           >
-            <div className="text-teal-400">{item.icon}</div>
-            <div className="font-medium">{item.text}</div>
+            <div className="text-teal-400">{item?.icon}</div>
+            <div className="font-medium">{item?.text}</div>
           </div>
         ))}
       </div>

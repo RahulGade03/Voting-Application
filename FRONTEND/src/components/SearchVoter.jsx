@@ -23,14 +23,14 @@ const SearchVoter = () => {
         });
         const data = await res.json();
         console.log(data);
-        if (data.success) {
-          setVoters(data.voters);
-          setTotalPages(data.totalPages);
+        if (data?.success) {
+          setVoters(data?.voters);
+          setTotalPages(data?.totalPages);
         } else {
-          throw new Error(data.error);
+          throw new Error(data?.error);
         }
       } catch (err) {
-        toast.error(err.message);
+        toast.error(err?.message);
         console.error("Failed to fetch voters", err);
       }
     };
@@ -39,8 +39,8 @@ const SearchVoter = () => {
 
   useEffect(() => {
     // Filter voters by name across voters
-    const filtered = voters.filter((v) =>
-      v.name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = voters?.filter((v) =>
+      v?.name?.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredVoters(filtered);
     // setCurrentPage(1); // Reset to first page on search
@@ -63,15 +63,15 @@ const SearchVoter = () => {
         })
         const data = await res.json();
         console.log(data);
-        if (data.success) {
-          setFoundVoters(data.voters);
+        if (data?.success) {
+          setFoundVoters(data?.voters);
         }
         else {
-          throw new Error(data.error);
+          throw new Error(data?.error);
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
       console.log(error);
     } finally {
       setLoading(false);

@@ -25,11 +25,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("voter");
+  const [loading, setLoading] = useState(false);
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+      setLoading(true);
       if (role === 'voter') {
         const voterRes = await fetch ('https://votingapplicationbackend.vercel.app/voter/login', {
           method: "POST",
@@ -44,10 +46,10 @@ export default function LoginPage() {
         })
 
         const voterData = await voterRes.json();
-        if (voterData.success) {
-          dispatch(setVoter(voterData.voter));
+        if (voterData?.success) {
+          dispatch(setVoter(voterData?.voter));
           // toast.success("Login successful!");
-          if (voterData.voter.mustChangePassword) {
+          if (voterData?.voter?.mustChangePassword) {
             navigate('/change-password');
           }
           else {
@@ -55,7 +57,7 @@ export default function LoginPage() {
           }
         }
         else {
-          throw new Error (voterData.error);
+          throw new Error (voterData?.error);
         }
       }
       else if (role === 'admin') {
@@ -72,10 +74,10 @@ export default function LoginPage() {
         })
 
         const adminData = await adminRes.json();
-        if (adminData.success) {
-          dispatch(setAdmin(adminData.admin));
+        if (adminData?.success) {
+          dispatch(setAdmin(adminData?.admin));
           // toast.success("Login successful!");
-          if (adminData.admin.mustChangePassword) {
+          if (adminData?.admin?.mustChangePassword) {
             navigate('/change-password');
           }
           else {
@@ -83,12 +85,14 @@ export default function LoginPage() {
           }
         }
         else {
-          throw new Error(adminData.error);
+          throw new Error(adminData?.error);
         }
       }
     } catch (error) {
-      toast.error(error.message);
+      toast.error(error?.message);
       console.log("Error: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -168,7 +172,7 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"
               >
-                Login
+                {loading ? "Please wait..." : "Login"}
               </Button>
             </form>
           </CardContent>
