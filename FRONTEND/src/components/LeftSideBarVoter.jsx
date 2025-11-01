@@ -75,7 +75,7 @@ const LeftSideBarVoter = () => {
 
       {/* Footer */}
       <div className="p-4 border-t border-slate-700 text-sm text-slate-400">
-        © 2025 Voting System
+        © 2025 OpenBallot
       </div>
     </div>
   );

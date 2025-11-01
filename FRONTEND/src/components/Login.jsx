@@ -107,7 +107,7 @@ export default function LoginPage() {
         <Card className="shadow-xl rounded-2xl border border-slate-700 bg-slate-800/80 backdrop-blur-md">
           <CardContent className="p-8">
             <h2 className="text-2xl font-bold text-center text-white mb-6">
-              Blockchain Voting System
+              OpenBallot - Blockchain Voting System
             </h2>
             <form onSubmit={handleLogin} className="space-y-5">
               {/* Email */}
