@@ -1,4 +1,4 @@
-# 🗳️ OpenBallot – A Decentralized Voting Application
+# 🗳️ OpenBallot – A Blockchain based Decentralized Voting Application
 
 ## 🚀 Overview
 **OpenBallot** is a secure, blockchain-based voting system designed to provide transparency, fairness, and simplicity in online elections.  
