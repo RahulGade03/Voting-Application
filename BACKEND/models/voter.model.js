@@ -9,7 +9,6 @@ const voterSchema = new mongoose.Schema({
   school: { type: String, enum: SchoolEnum, required: true },
   password: { type: String, required: true },
   profession: { type: String, enum: ProfessionEnum, required: true },
-  pollsVoted: [{ type: mongoose.Schema.Types.ObjectId, ref: "Poll" }],
   mustChangePassword: {type: Boolean, default: false}
 });
 

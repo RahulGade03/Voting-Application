@@ -85,13 +85,7 @@ export const availablePolls = async (req, res) => {
       { path: 'createdBy', select: 'name emailId' }
     ]);
 
-    // Filter out polls already voted
-    const notVotedPolls = polls.filter((poll) =>
-      !voter.pollsVoted.some((id) => id.toString() === poll._id.toString()) 
-    // The array method .some() checks if at least one element in the array meets a given condition.
-    );
-
-    const availablePolls = notVotedPolls.filter((poll) => 
+    const availablePolls = polls.filter((poll) => 
       new Date(poll.endDate) > new Date()
     );
 
@@ -261,16 +255,5 @@ Best regards,
       error: "Failed to process forgot password", 
       success: false 
     });
-  }
-}
-
-/* -------------------- 2) CAST VOTE -------------------- */
-export const castVote = async (req, res) => {
-  try {
-    const { pollId, candidateId, candidatename, voterId, voterName } = req.body;
-    const res = await contract.methods.getVotesByPoll(pollId).call();
-    
-  } catch (error) {
-    console.log(error);
   }
 }

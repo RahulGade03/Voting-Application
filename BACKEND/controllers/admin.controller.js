@@ -334,7 +334,7 @@ export const viewVoters = async (req, res) => {
 export const viewVoter = async (req, res) => {
   try {
     const voter = await Voter.findById(req.params.id)
-      .select('-password -pollsVoted');
+      .select('-password');
 
     if (!voter) {
       return res.status(404).json({
