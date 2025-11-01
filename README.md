@@ -1,10 +1,11 @@
 # 🗳️ OpenBallot – A Decentralized Voting Application
 
 ## 🚀 Overview
-**OpenBallot** is a secure, web-based voting system designed to provide transparency, fairness, and simplicity in online elections.  
+**OpenBallot** is a secure, blockchain-based voting system designed to provide transparency, fairness, and simplicity in online elections.  
 The platform enables **admins** to create and manage polls and **voters** to cast their votes safely using a web interface.
 
 The system focuses on:
+- Immutable voting through Ethereum blockchain
 - Robust authentication with cookies & JWT  
 - Secure REST API using Node.js, Express, and MongoDB  
 - Real-time state management with Redux  
@@ -24,12 +25,15 @@ The system focuses on:
 - React Toastify (for notifications)
 - TailwindCSS / Shadcn UI (for styling)
 - Fetch API with `credentials: "include"` for secure cookie communication
+- MetaMask
+- Web3
 
 ### Backend
 - Node.js + Express
 - MongoDB + Mongoose
 - JWT Authentication (stored in cookies)
 - Cookie Parser
+- Web3
 - CORS (Cross-Origin Resource Sharing)
 - dotenv (for environment configuration)
 
@@ -37,6 +41,7 @@ The system focuses on:
 - Frontend → **Vercel**
 - Backend → **Vercel**
 - Database → **MongoDB Atlas**
+- Votes → **Ethereum Sepolia Test Network**
 
 ---
 
@@ -82,6 +87,13 @@ npm run dev
     { "source": "/(.*)", "destination": "/" }
   ]
 }
+```
+### 🌐 3. Setup the MetaMask
+```bash
+create account at metamask
+update the settings to show the sepolia test network
+mine the sepolia ethers through https://sepolia-faucet.pk910.de/
+get the expension for your browser
 ```
 ---
 
