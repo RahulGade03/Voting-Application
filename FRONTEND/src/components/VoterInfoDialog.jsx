@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import { setVoter, setAdmin } from "@/redux/authSlice";
 
 const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const handleDelete = async () => {
     try {
       setLoading(true);
@@ -15,7 +15,8 @@ const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
       }
       );
       if (res.status == 401) {
-        navigate("/");
+        dispatch(setVoter(null));
+        dispatch(setAdmin(null));
         return;
       }
       const data = await res.json();

@@ -6,12 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mail, User } from "lucide-react";
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setVoter, setAdmin } from '@/redux/authSlice';
 
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('voter');
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +40,8 @@ const ForgotPassword = () => {
         });
       }
       if (res.status == 401) {
-        navigate("/");
+        dispatch(setVoter(null));
+        dispatch(setAdmin(null));
         return;
       }
       const data = await res.json();

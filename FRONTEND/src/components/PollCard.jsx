@@ -5,6 +5,7 @@ import { setSelectedPoll } from "@/redux/pollSlice";
 import { useWeb3 } from "@/context/Web3Context";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { setVoter, setAdmin } from "@/redux/authSlice";
 
 // Format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -44,7 +45,8 @@ const PollCard = ({ poll }) => {
         });
       }
       if (res.status == 401) {
-        navigate("/");
+        dispatch(setVoter(null));
+        dispatch(setAdmin(null));
         return;
       }
       const data = await res.json();

@@ -2,11 +2,10 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { setCreatedPolls } from "../redux/pollSlice.js"
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { setVoter, setAdmin } from "@/redux/authSlice.js";
 
 const useGetMyCreatedPolls = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     const { createdPolls } = useSelector((store) => store.polls);
 
     useEffect(() => {
@@ -17,7 +16,8 @@ const useGetMyCreatedPolls = () => {
                     credentials: "include"
                 });
                 if (res.status == 401) {
-                    navigate("/");
+                    dispatch(setVoter(null));
+                    dispatch(setAdmin(null));
                     return;
                 }
                 const data = await res.json();

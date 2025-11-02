@@ -47,7 +47,8 @@ const ChangePassword = () => {
           credentials: 'include'
         })
         if (res.status == 401) {
-          navigate("/");
+          dispatch(setVoter(null));
+          dispatch(setAdmin(null));
           return;
         }
         const data = await res.json();
@@ -67,7 +68,8 @@ const ChangePassword = () => {
           credentials: 'include'
         })
         if (res.status == 401) {
-          navigate("/");
+          dispatch(setVoter(null));
+          dispatch(setAdmin(null));
           return;
         }
         const data = await res.json();

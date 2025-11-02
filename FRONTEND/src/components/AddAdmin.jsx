@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import {setVoter, setAdmin} from '@/redux/authSlice'
 
 const AddAdmin = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     name: '',
     school: 'SCOPE',
@@ -25,7 +26,8 @@ const AddAdmin = () => {
         credentials: 'include'
       })
       if (res.status == 401) {
-        navigate("/");
+        dispatch(setVoter(null));
+        dispatch(setAdmin(null));
         return;
       }
 

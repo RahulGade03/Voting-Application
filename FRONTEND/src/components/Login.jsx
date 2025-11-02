@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 export default function LoginPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {voter, admin} = useSelector((state) => state.auth);
+  const { voter, admin } = useSelector((state) => state.auth);
   useEffect(() => {
     if (voter) {
       navigate("/voter");
@@ -21,7 +21,7 @@ export default function LoginPage() {
       navigate("/admin");
     }
   }, [])
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("voter");
@@ -33,7 +33,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       if (role === 'voter') {
-        const voterRes = await fetch (`${import.meta.env.VITE_BACKEND_URL}/voter/login`, {
+        const voterRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -45,7 +45,8 @@ export default function LoginPage() {
           credentials: 'include' // include cookies in the request
         })
         if (voterRes.status == 401) {
-          navigate("/");
+          dispatch(setVoter(null));
+          dispatch(setAdmin(null));
           return;
         }
 
@@ -61,11 +62,11 @@ export default function LoginPage() {
           }
         }
         else {
-          throw new Error (voterData?.error);
+          throw new Error(voterData?.error);
         }
       }
       else if (role === 'admin') {
-        const adminRes = await fetch (`${import.meta.env.VITE_BACKEND_URL}/admin/login`, {
+        const adminRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -153,22 +154,20 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setRole("voter")}
-                    className={`flex-1 py-2 rounded-lg border transition ${
-                      role === "voter"
+                    className={`flex-1 py-2 rounded-lg border transition ${role === "voter"
                         ? "bg-teal-600 text-white border-teal-500"
                         : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     Voter
                   </button>
                   <button
                     type="button"
                     onClick={() => setRole("admin")}
-                    className={`flex-1 py-2 rounded-lg border transition ${
-                      role === "admin"
+                    className={`flex-1 py-2 rounded-lg border transition ${role === "admin"
                         ? "bg-teal-600 text-white border-teal-500"
                         : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
-                    }`}
+                      }`}
                   >
                     Admin
                   </button>
@@ -184,7 +183,7 @@ export default function LoginPage() {
               </Button>
             </form>
           </CardContent>
-          
+
           {/* Forgot Password */}
           <Link to={'/forgot-password'} className="text-gray-300 underline self-center">Forgot Password?</Link>
         </Card>

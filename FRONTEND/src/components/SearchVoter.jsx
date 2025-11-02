@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import VoterList from "./VoterList";
 import VoterInfoDialog from "./VoterInfoDialog";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { setVoter, setAdmin } from "@/redux/authSlice";
+import { useDispatch } from "react-redux";
 
 const SearchVoter = () => {
   const [voters, setVoters] = useState([]);
@@ -13,7 +14,8 @@ const SearchVoter = () => {
   const [selectedVoter, setSelectedVoter] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     // Load full voter list on mount
@@ -24,7 +26,8 @@ const SearchVoter = () => {
           credentials: "include",
         });
         if (res.status == 401) {
-          navigate("/");
+          dispatch(setVoter(null));
+          dispatch(setAdmin(null));
           return;
         }
         const data = await res.json();

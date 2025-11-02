@@ -45,7 +45,8 @@ const LeftSideBarVoter = () => {
       credentials: 'include'
     });
     if (res.status == 401) {
-      navigate("/");
+      dispatch(setVoter(null));
+      dispatch(setAdmin(null));
       return;
     }
     const data = await res.json();

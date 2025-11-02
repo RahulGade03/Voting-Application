@@ -3,10 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import PollCardVoter from "./PollCardVoter";
 import { setAvailablePolls } from "@/redux/pollSlice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { setVoter, setAdmin } from "@/redux/authSlice";
 
 const Home = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { availablePolls } = useSelector((store) => store.polls);
 
@@ -18,7 +17,8 @@ const Home = () => {
           credentials: "include",
         });
         if (res.status == 401) {
-          navigate("/");
+          dispatch(setVoter(null));
+          dispatch(setAdmin(null));
           return;
         }
         const data = await res.json();
@@ -26,7 +26,7 @@ const Home = () => {
           dispatch(setAvailablePolls(data?.polls));
         }
         else {
-          throw new Error (data?.error);
+          throw new Error(data?.error);
         }
       } catch (error) {
         toast.error(error?.message);

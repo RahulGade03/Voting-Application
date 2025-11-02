@@ -1,13 +1,11 @@
-import { setAdmin } from '@/redux/authSlice';
+import { setVoter, setAdmin } from '@/redux/authSlice';
 import { setCreatedPolls } from '@/redux/pollSlice';
 import { Dialog, DialogContent, DialogTitle, DialogOverlay, DialogDescription } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const CreatePoll = ({ open, setOpen }) => {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: '',
@@ -64,7 +62,8 @@ const CreatePoll = ({ open, setOpen }) => {
         credentials: 'include'
       })
       if (res.status == 401) {
-        navigate("/");
+        dispatch(setVoter(null));
+        dispatch(setAdmin(null));
         return;
       }
 

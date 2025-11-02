@@ -2,11 +2,10 @@ import { useEffect } from "react"
 import { useDispatch } from "react-redux"
 import { setVotedPolls } from "@/redux/pollSlice";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { setVoter, setAdmin } from "@/redux/authSlice";
 
 const useGetMyVotedPolls = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchMyVotedPolls = async () => {
@@ -16,7 +15,8 @@ const useGetMyVotedPolls = () => {
                     credentials: "include"
                 });
                 if (res.status == 401) {
-                    navigate("/");
+                    dispatch(setVoter(null));
+                    dispatch(setAdmin(null));
                     return;
                 }
                 const data = await res.json();
