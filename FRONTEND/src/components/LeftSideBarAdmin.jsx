@@ -83,7 +83,7 @@ const LeftSideBarAdmin = () => {
       <div className="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-slate-200 shadow-lg flex flex-col">
         {/* Header */}
         <div className="p-6 border-b border-slate-700">
-          <h2 className="text-xl font-bold text-teal-400">OpenBallot - Admin Panel</h2>
+          <h2 className="text-xl font-bold text-teal-400">Admin Panel</h2>
         </div>
 
         {/* Menu Items */}
