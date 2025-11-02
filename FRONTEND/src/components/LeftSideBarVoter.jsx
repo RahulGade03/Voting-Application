@@ -60,7 +60,7 @@ const LeftSideBarVoter = () => {
     <div className="w-64 h-screen bg-slate-900 text-white flex flex-col fixed left-0 top-0">
       {/* Header */}
       <div className="p-6 border-b border-slate-700">
-        <h2 className="text-xl font-bold text-teal-400">Voter Panel</h2>
+        <h2 className="text-xl font-bold text-teal-400">OpenBallot - Voter Panel</h2>
       </div>
 
       {/* Menu Items */}
