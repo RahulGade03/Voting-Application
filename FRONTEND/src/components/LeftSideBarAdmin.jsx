@@ -25,8 +25,8 @@ const LeftSideBarAdmin = () => {
     { icon: <PlusSquare className="w-5 h-5" />, text: "Create Poll" },
     { icon: <Newspaper className="w-5 h-5" />, text: "My Created Polls" },
     ...(admin.access === "ALL"
-    ? [{ icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" }]
-    : []),
+      ? [{ icon: <UserPlus2 className="w-5 h-5" />, text: "Register Admin" }]
+      : []),
     { icon: <Users className="w-5 h-5" />, text: "Register Voter" },
     { icon: <Search className="w-5 h-5" />, text: "Search Voter" },
     { icon: <LogOut className="w-5 h-5" />, text: "Logout" },
@@ -61,11 +61,15 @@ const LeftSideBarAdmin = () => {
     }
   };
 
-  const logoutHandler = async() => {
-    const res = await fetch ('https://votingapplicationbackend.vercel.app/admin/logout', {
+  const logoutHandler = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/logout`, {
       method: 'POST',
       credentials: 'include'
     });
+    if (res.status == 401) {
+      navigate("/");
+      return;
+    }
     const data = await res.json();
     console.log(data);
     dispatch(setAdmin(null));
@@ -75,32 +79,32 @@ const LeftSideBarAdmin = () => {
 
   return (
     <>
-    <div className="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-slate-200 shadow-lg flex flex-col">
-      {/* Header */}
-      <div className="p-6 border-b border-slate-700">
-        <h2 className="text-xl font-bold text-teal-400">Admin Panel</h2>
-      </div>
+      <div className="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-slate-200 shadow-lg flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-slate-700">
+          <h2 className="text-xl font-bold text-teal-400">Admin Panel</h2>
+        </div>
 
-      {/* Menu Items */}
-      <div className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {items?.map((item, index) => (
-          <div
-            key={index}
-            onClick={() => mapHandler(item?.text)}
-            className="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-800 transition"
-          >
-            <div className="text-teal-400">{item?.icon}</div>
-            <div className="font-medium">{item?.text}</div>
-          </div>
-        ))}
-      </div>
+        {/* Menu Items */}
+        <div className="flex-1 p-4 space-y-2 overflow-y-auto">
+          {items?.map((item, index) => (
+            <div
+              key={index}
+              onClick={() => mapHandler(item?.text)}
+              className="flex items-center gap-3 px-4 py-2 rounded-lg cursor-pointer hover:bg-slate-800 transition"
+            >
+              <div className="text-teal-400">{item?.icon}</div>
+              <div className="font-medium">{item?.text}</div>
+            </div>
+          ))}
+        </div>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-700 text-sm text-slate-400">
-        © 2025 OpenBallot
-      </div>
+        {/* Footer */}
+        <div className="p-4 border-t border-slate-700 text-sm text-slate-400">
+          © 2025 OpenBallot
+        </div>
 
-    </div>
+      </div>
       <CreatePoll open={open} setOpen={setOpen} />
     </>
   );

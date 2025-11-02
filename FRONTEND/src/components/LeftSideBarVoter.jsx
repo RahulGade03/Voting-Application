@@ -39,17 +39,21 @@ const LeftSideBarVoter = () => {
     }
   };
 
-    const logoutHandler = async() => {
-      const res = await fetch ('https://votingapplicationbackend.vercel.app/voter/logout', {
-        method: 'POST',
-        credentials: 'include'
-      });
-      const data = await res.json();
-      console.log(data);
-      dispatch(setAdmin(null));
-      dispatch(setVoter(null));
-      navigate('/');
+  const logoutHandler = async () => {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/logout`, {
+      method: 'POST',
+      credentials: 'include'
+    });
+    if (res.status == 401) {
+      navigate("/");
+      return;
     }
+    const data = await res.json();
+    console.log(data);
+    dispatch(setAdmin(null));
+    dispatch(setVoter(null));
+    navigate('/');
+  }
 
   return (
     <div className="w-64 h-screen bg-slate-900 text-white flex flex-col fixed left-0 top-0">
@@ -71,7 +75,7 @@ const LeftSideBarVoter = () => {
           </div>
         ))}
       </div>
-      <WalletButton/>
+      <WalletButton />
 
       {/* Footer */}
       <div className="p-4 border-t border-slate-700 text-sm text-slate-400">

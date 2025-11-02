@@ -19,7 +19,7 @@ const ForgotPassword = () => {
       setLoading(true);
       let res;
       if (role === 'voter') {
-        res = await fetch('https://votingapplicationbackend.vercel.app/voter/forgot-password', {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/forgot-password`, {
           method: 'POST',
           headers: {
             "Content-Type": 'application/json'
@@ -28,7 +28,7 @@ const ForgotPassword = () => {
         });
       }
       else if (role === 'admin') {
-        res = await fetch('https://votingapplicationbackend.vercel.app/admin/forgot-password', {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/forgot-password`, {
           method: 'POST',
           headers: {
             "Content-Type": 'application/json'
@@ -36,7 +36,10 @@ const ForgotPassword = () => {
           body: JSON.stringify({ email })
         });
       }
-
+      if (res.status == 401) {
+        navigate("/");
+        return;
+      }
       const data = await res.json();
       if (data?.success) {
         toast.success("Email sent to your account!");
@@ -89,8 +92,8 @@ const ForgotPassword = () => {
                     type="button"
                     onClick={() => setRole("voter")}
                     className={`flex-1 py-2 rounded-lg border transition ${role === "voter"
-                        ? "bg-teal-600 text-white border-teal-500"
-                        : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
+                      ? "bg-teal-600 text-white border-teal-500"
+                      : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
                       }`}
                   >
                     Voter
@@ -99,8 +102,8 @@ const ForgotPassword = () => {
                     type="button"
                     onClick={() => setRole("admin")}
                     className={`flex-1 py-2 rounded-lg border transition ${role === "admin"
-                        ? "bg-teal-600 text-white border-teal-500"
-                        : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
+                      ? "bg-teal-600 text-white border-teal-500"
+                      : "bg-slate-900/50 text-slate-300 border-slate-600 hover:bg-slate-700"
                       }`}
                   >
                     Admin
@@ -113,7 +116,7 @@ const ForgotPassword = () => {
                 type="submit"
                 className="w-full py-3 text-lg font-semibold bg-teal-600 hover:bg-teal-500 rounded-xl"
               >
-                { loading ? "Please wait..." :  "Submit"}
+                {loading ? "Please wait..." : "Submit"}
               </Button>
             </form>
           </CardContent>

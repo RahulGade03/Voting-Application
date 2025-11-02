@@ -3,19 +3,25 @@ import { useSelector, useDispatch } from "react-redux";
 import PollCardVoter from "./PollCardVoter";
 import { setAvailablePolls } from "@/redux/pollSlice";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { availablePolls } = useSelector((store) => store.polls);
 
   useEffect(() => {
     const fetchAllPolls = async () => {
       try {
-        const response = await fetch("https://votingapplicationbackend.vercel.app/voter/polls", {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/polls`, {
           method: "GET",
           credentials: "include",
         });
-        const data = await response.json();
+        if (res.status == 401) {
+          navigate("/");
+          return;
+        }
+        const data = await res.json();
         if (data?.success) {
           dispatch(setAvailablePolls(data?.polls));
         }

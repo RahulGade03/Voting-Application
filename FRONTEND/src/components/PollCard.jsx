@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setSelectedPoll } from "@/redux/pollSlice";
 import { useWeb3 } from "@/context/Web3Context";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 // Format date as dd/mm/yyyy
 function formatDate(dateStr) {
@@ -20,6 +21,7 @@ const PollCard = ({ poll }) => {
   const { voter, admin } = useSelector((store) => store.auth);
   const { contract, connect, account, web3 } = useWeb3();
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 
   const handleViewResults = async () => {
@@ -30,16 +32,20 @@ const PollCard = ({ poll }) => {
       }
       let res;
       if (voter !== null) {
-        res = await fetch(`https://votingapplicationbackend.vercel.app/voter/poll-result/${poll.pollId}`, {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/poll-result/${poll.pollId}`, {
           method: 'GET',
           credentials: 'include',
         });
       }
       else if (admin !== null) {
-        res = await fetch(`https://votingapplicationbackend.vercel.app/admin/poll-result/${poll.pollId}`, {
+        res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/poll-result/${poll.pollId}`, {
           method: 'GET',
           credentials: 'include',
         });
+      }
+      if (res.status == 401) {
+        navigate("/");
+        return;
       }
       const data = await res.json();
       console.log(data);
@@ -80,14 +86,14 @@ const PollCard = ({ poll }) => {
       </div>
 
       {pollEnded ? (
-      <button
-        onClick={handleViewResults}
-        className = {`mt-4 w-full py-2 px-4 ${!loading ? "bg-indigo-600" : "bg-indigo-500"} text-white rounded-xl font-medium text-sm hover: ${!loading ? "bg-indigo-700" : "bg-indigo-500"} transition-colors`}
-      >
-        {!loading ?  "View Results" : "Please wait..."}
-      </button>
+        <button
+          onClick={handleViewResults}
+          className={`mt-4 w-full py-2 px-4 ${!loading ? "bg-indigo-600" : "bg-indigo-500"} text-white rounded-xl font-medium text-sm hover: ${!loading ? "bg-indigo-700" : "bg-indigo-500"} transition-colors`}
+        >
+          {!loading ? "View Results" : "Please wait..."}
+        </button>
       ) : (
-      <p className="font-bold border-2 border-blue-600 p-1 m-2 rounded-2xl text-center">
+        <p className="font-bold border-2 border-blue-600 p-1 m-2 rounded-2xl text-center">
           Results not declared yet
         </p>
       )}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import VoterList from "./VoterList";
 import VoterInfoDialog from "./VoterInfoDialog";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const SearchVoter = () => {
   const [voters, setVoters] = useState([]);
@@ -12,15 +13,20 @@ const SearchVoter = () => {
   const [selectedVoter, setSelectedVoter] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Load full voter list on mount
     const fetchVoters = async () => {
       try {
-        const res = await fetch(`https://votingapplicationbackend.vercel.app/admin/view-voters?page=${currentPage}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/view-voters?page=${currentPage}`, {
           method: "GET",
           credentials: "include",
         });
+        if (res.status == 401) {
+          navigate("/");
+          return;
+        }
         const data = await res.json();
         console.log(data);
         if (data?.success) {
@@ -57,7 +63,7 @@ const SearchVoter = () => {
     try {
       setLoading(true);
       if (searchTerm.trim().length > 0) {
-        const res = await fetch(`https://votingapplicationbackend.vercel.app/admin/view-voter-byname?searchString=${searchTerm}`, {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/view-voter-byname?searchString=${searchTerm}`, {
           method: 'GET',
           credentials: "include",
         })

@@ -38,7 +38,7 @@ export const voterLogin = async (req, res) => {
     );
 
     res.status(200)
-       .cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 1 * 24 * 60 * 60 * 1000 })
+       .cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none', maxAge: 1 * 1 * 60 * 60 * 1000 })
        .json({
           voter: voter,
           success: true

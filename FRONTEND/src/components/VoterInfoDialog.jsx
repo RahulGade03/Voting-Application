@@ -1,19 +1,23 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const VoterInfoDialog = ({ voter, onClose, onDelete }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        `https://votingapplicationbackend.vercel.app/admin/delete-voter/${voter._id}`,
-        {
-          method: "DELETE",
-          credentials: "include",
-        }
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/delete-voter/${voter._id}`, {
+        method: "DELETE",
+        credentials: "include",
+      }
       );
+      if (res.status == 401) {
+        navigate("/");
+        return;
+      }
       const data = await res.json();
       if (data?.success) {
         toast.success(data?.message);

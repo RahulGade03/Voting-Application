@@ -36,7 +36,7 @@ const ChangePassword = () => {
       }
 
       if (voter) {
-        const res = await fetch('https://votingapplicationbackend.vercel.app/voter/change-password', {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/change-password`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -46,13 +46,17 @@ const ChangePassword = () => {
           }),
           credentials: 'include'
         })
+        if (res.status == 401) {
+          navigate("/");
+          return;
+        }
         const data = await res.json();
         if (data.success === false) {
           throw new Error(data.error);
         }
       }
       else if (admin) {
-        const res = await fetch('https://votingapplicationbackend.vercel.app/voter/change-password', {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/voter/change-password`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -62,6 +66,10 @@ const ChangePassword = () => {
           }),
           credentials: 'include'
         })
+        if (res.status == 401) {
+          navigate("/");
+          return;
+        }
         const data = await res.json();
         if (data?.success === false) {
           throw new Error(data?.error);

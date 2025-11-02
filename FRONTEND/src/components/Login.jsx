@@ -33,7 +33,7 @@ export default function LoginPage() {
     try {
       setLoading(true);
       if (role === 'voter') {
-        const voterRes = await fetch ('https://votingapplicationbackend.vercel.app/voter/login', {
+        const voterRes = await fetch (`${import.meta.env.VITE_BACKEND_URL}/voter/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -44,6 +44,10 @@ export default function LoginPage() {
           }),
           credentials: 'include' // include cookies in the request
         })
+        if (voterRes.status == 401) {
+          navigate("/");
+          return;
+        }
 
         const voterData = await voterRes.json();
         if (voterData?.success) {
@@ -61,7 +65,7 @@ export default function LoginPage() {
         }
       }
       else if (role === 'admin') {
-        const adminRes = await fetch ('https://votingapplicationbackend.vercel.app/admin/login', {
+        const adminRes = await fetch (`${import.meta.env.VITE_BACKEND_URL}/admin/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -72,6 +76,10 @@ export default function LoginPage() {
           }),
           credentials: 'include'
         })
+        if (adminRes.status == 401) {
+          navigate("/");
+          return;
+        }
 
         const adminData = await adminRes.json();
         if (adminData?.success) {

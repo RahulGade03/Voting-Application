@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const RegisterVoter = () => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     name: '',
     school: 'SCOPE',
@@ -14,7 +16,7 @@ const RegisterVoter = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('https://votingapplicationbackend.vercel.app/admin/register-voter', {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/register-voter`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -22,6 +24,10 @@ const RegisterVoter = () => {
         body: JSON.stringify(form),
         credentials: 'include'
       })
+      if (res.status == 401) {
+        navigate("/");
+        return;
+      }
       const data = await res.json();
       if (data?.success) {
         toast.success(data?.message);
@@ -39,19 +45,19 @@ const RegisterVoter = () => {
   };
 
   const onChange = (e) => {
-    setForm({...form, [e.target.name]: e.target.value})
+    setForm({ ...form, [e.target.name]: e.target.value })
   }
 
   return (
     <div className="ml-64 p-10 min-h-screen bg-gray-50"> {/* pushes form to right of sidebar */}
       <div className="max-w-2xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Register as Voter</h2>
-        
+
         <form onSubmit={(e) => submitHandler(e)} className="space-y-5">
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input 
+            <input
               type="text"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               name='name'
@@ -63,7 +69,7 @@ const RegisterVoter = () => {
           {/* School */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">School</label>
-            <select 
+            <select
               name="school"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               onChange={(e) => onChange(e)}
@@ -79,7 +85,7 @@ const RegisterVoter = () => {
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email ID</label>
-            <input 
+            <input
               type="email"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               name='emailId'
@@ -91,7 +97,7 @@ const RegisterVoter = () => {
           {/* Profession */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Profession</label>
-            <select 
+            <select
               name="profession"
               className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
               onChange={(e) => onChange(e)}
@@ -106,7 +112,7 @@ const RegisterVoter = () => {
 
           {/* Submit Button */}
           <div className="pt-4">
-            <button 
+            <button
               type="submit"
               disabled={loading ? true : false}
               className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition-colors`}

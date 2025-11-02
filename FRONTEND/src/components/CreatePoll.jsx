@@ -3,9 +3,11 @@ import { setCreatedPolls } from '@/redux/pollSlice';
 import { Dialog, DialogContent, DialogTitle, DialogOverlay, DialogDescription } from '@radix-ui/react-dialog';
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const CreatePoll = ({ open, setOpen }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
     title: '',
@@ -55,12 +57,16 @@ const CreatePoll = ({ open, setOpen }) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const res = await fetch('https://votingapplicationbackend.vercel.app/admin/create-poll', {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/admin/create-poll`, {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
         credentials: 'include'
       })
+      if (res.status == 401) {
+        navigate("/");
+        return;
+      }
 
       const data = await res.json();
       if (data?.success) {
@@ -75,9 +81,9 @@ const CreatePoll = ({ open, setOpen }) => {
           createdBy: ''
         });
         const poll = data?.poll;
-        const updatedPolls = [...createdPolls, poll ];
+        const updatedPolls = [...createdPolls, poll];
         const updatedAdminPolls = [...admin.polls, poll.pollId];
-        const updatedAdmin = {...admin, polls: updatedAdminPolls};
+        const updatedAdmin = { ...admin, polls: updatedAdminPolls };
         dispatch(setAdmin(updatedAdmin));
         dispatch(setCreatedPolls(updatedPolls));
       }
