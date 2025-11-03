@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
-import {setVoter, setAdmin} from '@/redux/authSlice'
+import { setVoter, setAdmin } from '@/redux/authSlice'
 
 const AddAdmin = () => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +33,12 @@ const AddAdmin = () => {
 
       const data = await res.json();
       if (data?.success) {
+        setForm({
+          name: '',
+          school: 'SCOPE',
+          emailId: '',
+          access: 'NONE',
+        })
         toast.success(data?.message);
       }
       else {
@@ -79,9 +85,13 @@ const AddAdmin = () => {
               value={form.school}
             >
               <option value="SCOPE">SCOPE</option>
+              <option value="SENSE">SENSE</option>
+              <option value="SELECT">SELECT</option>
               <option value="SITE">SITE</option>
               <option value="HOT">HOT</option>
-              <option value="SENSE">SENSE</option>
+              <option value="SCE">SCE</option>
+              <option value="SBST">SBST</option>
+              <option value="SMEC">SMEC</option>
             </select>
           </div>
 

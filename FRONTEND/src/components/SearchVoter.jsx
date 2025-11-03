@@ -31,7 +31,7 @@ const SearchVoter = () => {
           return;
         }
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if (data?.success) {
           setVoters(data?.voters);
           setTotalPages(data?.totalPages);
@@ -71,7 +71,7 @@ const SearchVoter = () => {
           credentials: "include",
         })
         const data = await res.json();
-        console.log(data);
+        // console.log(data);
         if (data?.success) {
           setFoundVoters(data?.voters);
         }

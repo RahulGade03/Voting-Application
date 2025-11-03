@@ -1,4 +1,3 @@
-// middlewares/connectdb.js
 import mongoose from "mongoose";
 
 let isConnected = false; // Global flag

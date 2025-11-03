@@ -249,7 +249,7 @@ export const pollList = async (req, res) => {
   }
 };
 
-/* -------------------- 6) View Poll Results by Poll ID -------------------- authmiddleware */
+/* -------------------- 6) View Poll Results by Poll ID (on chain) -------------------- authmiddleware */
 export const pollResult = async (req, res) => {
   try {
     const pollId = req.params.pollId;

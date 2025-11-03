@@ -22,7 +22,6 @@ const PollCard = ({ poll }) => {
   const { voter, admin } = useSelector((store) => store.auth);
   const { contract, connect, account, web3 } = useWeb3();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
 
   const handleViewResults = async () => {

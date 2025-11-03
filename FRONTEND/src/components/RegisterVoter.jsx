@@ -32,6 +32,12 @@ const RegisterVoter = () => {
       }
       const data = await res.json();
       if (data?.success) {
+        setForm({
+          name: '',
+          school: 'SCOPE',
+          emailId: '',
+          profession: 'Student',
+        });
         toast.success(data?.message);
       }
       else {
@@ -78,9 +84,13 @@ const RegisterVoter = () => {
               value={form.school}
             >
               <option value="SCOPE">SCOPE</option>
+              <option value="SENSE">SENSE</option>
+              <option value="SELECT">SELECT</option>
               <option value="SITE">SITE</option>
               <option value="HOT">HOT</option>
-              <option value="SENSE">SENSE</option>
+              <option value="SCE">SCE</option>
+              <option value="SBST">SBST</option>
+              <option value="SMEC">SMEC</option>
             </select>
           </div>
 

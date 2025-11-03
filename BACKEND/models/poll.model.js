@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { v4 as uuidv4 } from "uuid";
 
-const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
+const SchoolEnum = ["SCOPE", "SENSE", "SITE", "SELECT", "SMEC", "SCE", "SBST", "HOT"];
 
 const pollSchema = new mongoose.Schema({
   pollId: { type: String, default: uuidv4, unique: true },

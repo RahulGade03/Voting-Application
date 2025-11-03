@@ -179,8 +179,9 @@ export const myVotedPolls = async (req, res) => {
     });
   
   } catch (err) {
-    res.status(500).json({ error: err, 
-      status: false 
+    res.status(500).json({ 
+      error: err, 
+      success: false 
     });
   }
 };

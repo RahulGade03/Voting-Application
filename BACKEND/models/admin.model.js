@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const SchoolEnum = ["SCOPE", "ALL", "SENSE", "SITE", "HOT"];
+const SchoolEnum = ["SCOPE", "SENSE", "SITE", "SELECT", "SMEC", "SCE", "SBST", "HOT", "ALL"];
 
 const adminSchema = new mongoose.Schema({
   name: { type: String, required: true },
