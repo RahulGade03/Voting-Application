@@ -180,7 +180,7 @@ const CreatePoll = ({ open, setOpen }) => {
           <div>
             <label className="block text-sm font-medium mb-1">Eligible Schools</label>
             <div className="flex flex-wrap gap-4">
-              {['SCOPE', 'SENSE', 'SITE', 'HOT'].map((school) => (
+              {["SCOPE", "SENSE", "SITE", "SELECT", "SMEC", "SCE", "SBST", "HOT"].map((school) => (
                 <label key={school} className="flex items-center gap-2">
                   <input
                     type="checkbox"
