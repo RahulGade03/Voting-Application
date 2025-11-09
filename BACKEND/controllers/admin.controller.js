@@ -156,6 +156,7 @@ Login Details:
 Type: Voter Account
 Username (email): ${emailId}
 Password: ${password}
+Application Link: ${process.env.FRONTEND_URL}
 
 Please login and change your password immediately.
 
@@ -210,6 +211,7 @@ Login Details:
 Type: Admin Account
 Username (email): ${emailId}
 Password: ${password}
+Application Link: ${process.env.FRONTEND_URL}
 
 Please login and change your password immediately.
 
@@ -460,6 +462,7 @@ Login Details:
 Type: Admin Account
 Username (email): ${email}
 Password: ${password}
+Application Link: ${process.env.FRONTEND_URL}
 
 Please login and change your password immediately.
 

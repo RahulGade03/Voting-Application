@@ -239,6 +239,7 @@ export const forgotPassword = async (req, res) => {
 Your password has been reset. Please use the following temporary password to log in:
 Type: Voter Account
 Temporary Password: ${newPassword}
+Application Link: ${process.env.FRONTEND_URL}
 
 For security reasons, you will be required to change this password upon your next login.
 Best regards,
